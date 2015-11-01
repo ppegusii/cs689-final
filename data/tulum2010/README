@@ -1,0 +1,25 @@
+WSU Tulum Smart Apartment 2009-2010 Two Resident Testbed
+
+Description
+
+This dataset represents sensor events collected in the WSU Tulum
+smart apartment testbed during the 2009-2010 academic year.
+The apartment housed two married residents
+at this time and they performed their normal daily activities.
+
+File format
+
+One data file is included in this release.  Sixteen activities are annotated
+by denoting the begin and end of activity occurrence.
+
+Sensor layouts
+
+The sensors consist of 31 motion sensors (M001 through M031) and
+five temperature sensors (T001 through T005).
+The sensor layout of the Tulum apartment is shown in the file
+Tulum_Sensor_Map.png.
+
+All use of the data must cite the WSU CASAS smart home project.
+
+D. Cook.  Learning setting-generalized activity models for smart spaces.
+IEEE Intelligent Systems, 2011.

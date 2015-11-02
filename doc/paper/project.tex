@@ -19,46 +19,61 @@
 HomeActivity: Recognizing activities in a home using sensor information. 
 
 \section{Some description of the problem, and why it is interesting/challenging.}
-In this problem, we tackle the problem of activity recognition using available sensor information. 
+For our group project, we tackle the problem of activity recognition using available sensor information installed in homes. 
+These sensors could be infrared motion detector sensors (to understand when a person entered a room or opened a fridge),
+to RFID sensors, to microphone based labeling of activities to record the ground truth. These datasets 
+are usually available in the form of timestamp and the corresponding activity or sensor label. 
+So, in this project we would like to predict a label (i.e. the activity) given a sequence of observations. 
+
+\begin{enumerate}
  
-- Interesting:
-	- Applications to healthcare; aberration to eldery mvoing; 
-		- long term monitoring of degenerative heath;
-	- Energy savings
+\item Interesting because it has applications that spans across various domains:
+	\begin{enumerate}
+	\item Healthcare\\
+		- Long term monitoring of activities could provide us interesting insights on degenerative heath \\
+		- Especially useful in monitoring health of elderly people\\
+	\item  Energy savings \\
+		- Understanding the pattern of activities could help us save energy. \\
+		- For example, switching off AC/heater when no one is at home \\
+	\item  From a Security perspective\\
+		- Again, notifications can be sent to alert the home owners if there is an aberrant activity in the door entrance. \\
+	\item  Intelligent Homes\\
 		- 
-	- Security
-		- 
-	- Intelligent Homes
-		- 
-- Challenging
-	- Sensor datasets could be noisy
-		- Doors open and close
-		- May not be accurately labeled
+	\end{enumerate}
+\item Challenging
+		\begin{enumerate}
+	\item Sensor datasets could be noisy\\
+		- the front doors may open and close multiple times; this doesn't may not indicate that the person has left the home.\\
+		- sometimes the sensors itself may have false positives. \\
 		
-	- mapping of multiple labels to a sensor activity
-		- fridge ; make coffee and make cooking
-		- 
-	
-	
-Healthcare , security; energy efficiency; 
+	\item multiple labels may be mapped to a single sensor activity\\
+		- opening of a fridge may mean both; make coffee and make cooking\\
+		- some other information such as how long the person spent in the kitchen may provide some useful insight\\
+		
+	\item Imbalanced class problem\\
+		- machine learning algorithms and works best when the number of instances of each classes are roughly equal\\
+		- where the total number of a class of data (positive) is far less than the total number of another class of data (negative)	\\
+		- In this problem, no activity is a perfectly reasonable label. So the prediction model may always output 'no activity' and be accurate 80\% of the time.\\
+		\end{enumerate}
 
+\end{enumerate}
 
-Discover human activity 
-
-Sensor values identify the labels; 
-
-
-
-User comfort versus near optimal schedule
- 
-1 month dataset; 25Feb to 1 March
-Imbalanced class problem
-where the total number of a class of data (positive) is far less than the total number of another class of data (negative)
-machine learning algorithms and works best when the number of instances of each classes are roughly equal
 \section{Methods that might be explored to solve it. }
-HMM, 
-CRF,
-SVM
+We would like to explore the following techniques:
+	\begin{enumerate}
+\item HMM - 
+\item CRF - 
+\item SVM - 
+	\end{enumerate}
+	
+The datasets available to us are:
+	\begin{enumerate}
+\item Kasteren dataset - has over a month long sensor information from 3 homes.
+\item Tulum dataset - more than six month period from a single home
+	\end{enumerate}
 \section{ Timeline for finishing the project. }
+ - 2.5 weeks for implementing these modeling methods. \\
+ - 1 week for analyzing with different dataset; and writing it up. 
+ - 
 
 \end{document}  

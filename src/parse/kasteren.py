@@ -23,18 +23,7 @@ def main():
     # print(data)
     with gzip.open(args.data, 'w') as f:
         data.to_csv(f, float_format='%.0f')
-
-    # return the first non-zero mode unless the only mode is zero
-    def mode(series):
-        counts = series.value_counts()
-        modes = counts.index
-        if len(modes) == 1:
-            return modes[0]
-        if modes[0] == 0:
-            return modes[1]
-        return modes[0]
-    # resampled = data.resample(args.timestep, how='median')
-    resampled = data.resample(args.timestep, how=mode)
+    resampled = resample(data, args.timestep)
     with gzip.open(args.resampled_data, 'w') as f:
         resampled.to_csv(f, float_format='%.0f')
     names = {
@@ -45,12 +34,40 @@ def main():
         json.dump(names, f)
 
 
+# Down-sample the pandas dataframe data to the given timestep.
+# Right now, the down-sample results in the majority for that
+# timestep, unless the majority is 0.
+# In that case it will assign the next most frequent occurrence,
+# if one exists.
+def resample(data, timestep):
+
+    # return the first non-zero mode unless the only mode is zero
+    def mode(series):
+        counts = series.value_counts()
+        modes = counts.index
+        if len(modes) == 1:
+            return modes[0]
+        if modes[0] == 0:
+            return modes[1]
+        return modes[0]
+    # return = data.resample(args.timestep, how='median')
+    return data.resample(timestep, how=mode)
+
+
+# Concatenate the sensor value and activity label
+# dataframes so that the new index is the union
+# of the two and missing values are zero filled.
 def combine(sensorValues, activityLabels):
     df = pd.concat([sensorValues, activityLabels], axis=1)
     df.fillna(value=0, inplace=True)
     return df
 
 
+# Extract a pandas time series from a file such as
+# 'data/kasteren/2010/datasets/houseA/activity_labels.txt'
+# Overwrite activity labels instead of having multiple
+# activity labels for any timestep.
+# Overwrites will be printed to stdout.
 def activityLabels(fileName):
     with open(fileName, 'rb') as f:
         raw = pd.read_table(
@@ -89,6 +106,13 @@ def activityLabels(fileName):
     return s
 
 
+# Given a file such as
+# 'data/kasteren/2010/datasets/houseA/sensor_values.txt'
+# and a list of possible sensor IDs
+# Extract a pandas dataframe of size N by M
+# where N is the number of seconds between and including
+# the earliest and latest events
+# and M is the number of sensors.
 def sensorValues(fileName, sensorIDs):
     with open(fileName, 'rb') as f:
         raw = pd.read_table(
@@ -114,6 +138,9 @@ def sensorValues(fileName, sensorIDs):
     return df
 
 
+# Given a file such as
+# 'data/kasteren/2010/datasets/houseA/sensor_names.txt'
+# return a map of sensor IDS to names.
 def sensorNames(fileName):
     names = {}
     lineNum = 0
@@ -126,6 +153,9 @@ def sensorNames(fileName):
     return names
 
 
+# Given a file such as
+# 'data/kasteren/2010/datasets/houseA/activity_names.txt'
+# return a map of activity IDS to names.
 def activityNames(fileName):
     names = {}
     names[0] = 'idle'

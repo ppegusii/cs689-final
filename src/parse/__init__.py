@@ -28,7 +28,7 @@ def load_sensordata(house):
     fname = output_dir + "/" + output_file.format(house=house)
 
     if os.path.isfile(fname):
-        df = pd.read_csv(fname, header = True, parse_dates=True)
+        df = pd.read_csv(fname, header=True,names=range(1,17), parse_dates=True)
         df = df.fillna(0)
     else:
 

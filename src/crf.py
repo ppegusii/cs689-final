@@ -39,8 +39,8 @@ def main():
     X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.7, random_state=0)
 
     # Training using Linear SVM
-    # test_SVM()
-
+    test_SVM(X_train, X_test, y_train, y_test)
+    exit()
     # Y should be integer and starting from 0. https://github.com/pystruct/pystruct/issues/114
     X_train = [  np.array(x_i, dtype=np.uint8) [np.newaxis,:] for x_i in X_train ]
     X_test =  [  np.array(x_i, dtype=np.uint8)[np.newaxis, :] for x_i in X_test ]

@@ -58,7 +58,8 @@ def resample(data, timestep):
 # dataframes so that the new index is the union
 # of the two and missing values are zero filled.
 def combine(sensorValues, activityLabels):
-    df = pd.concat([sensorValues, activityLabels], axis=1)
+    # df = pd.concat([sensorValues, activityLabels], axis=1)
+    df = pd.concat([sensorValues, activityLabels], axis=1, join='inner')
     df.fillna(value=0, inplace=True)
     return df
 

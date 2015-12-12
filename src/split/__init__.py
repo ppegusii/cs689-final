@@ -26,6 +26,23 @@ def trainTest(df, minSeqLen, maxSeqLen, testSize=0.7, seed=0):
         In [0, 1]. This is the probable proportional size of the test set.
     seed : int
         A seed for the random number generator for retrieving idential splits.
+
+    Returns
+    -------
+    trainDf : pandas dataframe
+        Contains concatenated training sequences.
+        Rows have the same consistency as the df parameter.
+    testDf : pandas dataframe
+        Contains concatenated testing sequences.
+        Rows have the same consistency as the df parameter.
+    trainLens : list of ints
+        Lengths of training sequences in trainDf.
+    testLens : list of ints
+        Lengths of testing sequences in testDf.
+    testSize : float
+        In [0, 1]. This is the true proportional size of the test set.
+        Given as a number of observations in test over total number of
+        observations.
     '''
     # Create a set of train and test sequences as follows
     # Create training and testing lists to house sequences

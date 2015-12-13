@@ -35,6 +35,8 @@ def classify(data):
     )
     print('Cross validation scores: {}'.format(scores))
     print('Mean cross validation score: {}'.format(scores.mean()))
+    print('Standard deviation in cross validation score: {}'.format(
+        scores.std()))
     print('Test score: {}'.format(clf.score(X_test, y_test)))
 
 

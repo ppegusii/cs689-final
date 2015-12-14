@@ -1,78 +1,93 @@
+#!/usr/bin/env python
+
+# using the CRF suite to create the prediction model
+
+import argparse
+import load
+import split
+import sys
+import pycrfsuite
 import numpy as np
-import pandas as pd
-from parse import load_sensordata
-from sklearn import cross_validation
-from sklearn.svm import LinearSVC
-from pystruct.models import ChainCRF
-from pystruct.learners import FrankWolfeSSVM,NSlackSSVM,OneSlackSSVM
-
-
-def test_SVM(X_train, X_test, y_train, y_test):
-    svm = LinearSVC(dual=False, C=.1)
-    svm.fit(np.vstack(X_train), np.hstack(y_train))
-    print("Test score with linear SVM: %f" % svm.score(np.vstack(X_test),
-                                                   np.hstack(y_test)))
-
-def replace(l, label_map):
-    return map(lambda x: [label_map[int(x[0])]], l)
 
 def main():
+    args = parseArgs(sys.argv)
+    data = load.data(args.data, dtype_str=True)
+    classify(data)
+    test_model(data)
 
-    house = 'A'
+def classify(data):
 
-    df = load_sensordata(house)
-    # convert to features and labels
-    X = df.as_matrix(range(3,16))#[:10000]
-    y = df.as_matrix([16])#[:10000]
-    print y
-    labels = np.array(np.unique(y), dtype=int)
-    labels_map = dict( zip(labels, range(len(labels))))
-    y = replace(y, labels_map)
-    #print y
-    #print np.unique(y)
+    trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(
+        data, 5400, 5400*2, testSize=0.3)
 
+    #X_train = trainDf.values[:, :trainDf.shape[1] - 2]
+    #y_train = trainDf.values[:, trainDf.shape[1] - 1]
 
-    # y = y
-    # print max(y)
-    # print min(y)
-    X, y = np.array(X, dtype=np.uint8),np.int_(y) # np.array(y, dtype=np.uint8)
-    X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.7, random_state=0)
+    X_train = np.array_split(trainDf.values[:, :trainDf.shape[1] - 2], 66290)
+    y_train = np.array_split(trainDf.values[:, trainDf.shape[1] - 1], 66290)
 
-    # Training using Linear SVM
-    test_SVM(X_train, X_test, y_train, y_test)
-    exit()
-    # Y should be integer and starting from 0. https://github.com/pystruct/pystruct/issues/114
-    X_train = [  np.array(x_i, dtype=np.uint8) [np.newaxis,:] for x_i in X_train ]
-    X_test =  [  np.array(x_i, dtype=np.uint8)[np.newaxis, :] for x_i in X_test ]
-    y_train = np.array([  np.array(y_i) for y_i in y_train ])
-    y_test = np.array([  np.array(y_i) for y_i in y_test ])
+    #X_test = np.array_split(np.array(testDf.values[:, :testDf.shape[1] - 2], dtype=np.uint8), 30)
+    #y_test = np.array_split(np.array(testDf.values[:, testDf.shape[1] - 1], dtype=np.uint8), 30)
 
-    #idx  = np.argmax(y_train)
-
-    print np.unique(y_train.ravel())
-    #print y_train[idx-5: idx+5]
-    #print max(y_train)
-
-    #print X_train[0]
-    #print X_train[0].shape
-    #print y_train[0]
-    #print y_train[0].shape
-    # print y_train[0].dtype, X_train[0].dtype
-
-    print "Learning SVM complete."
-    #Train using linear chain CRF
-    #https://groups.google.com/forum/#!topic/pystruct/KIkF7fzCyDI
-    model = ChainCRF()
-    #ssvm = NSlackSSVM(model=model, C=1, max_iter=11)
-    ssvm = FrankWolfeSSVM(model=model, C=.1, max_iter=11)
-
-    #ssvm = OneSlackSSVM(model=model)
-    ssvm.fit(X_train, y_train)
-    print "Learning complete..."
-    print("Test score with chain CRF: %f" % ssvm.score(X_test, y_test))
+    trainer = pycrfsuite.Trainer(verbose=False)
+    #trainer.append(X_train, y_train)
+    # X_train.shape = [  [sentence feature [ word feature] ] ]
+    # y_train.shape = [   [sentence [ word label] ]   ]
+    for xseq, yseq in zip(X_train, y_train):
+        #print xseq.shape, yseq.shape
+        #print xseq , yseq
+        trainer.append(xseq, yseq)
 
 
+    trainer.set_params({
+    'c1': 1.0,   # coefficient for L1 penalty
+    'c2': 1e-3,  # coefficient for L2 penalty
+    'max_iterations': 11,  # stop earlier
+
+    # include transitions that are possible, but not observed
+    'feature.possible_transitions': True
+    })
+
+    trainer.train('house_a.crfsuite')
+    print "Model created"
+
+def test_model(data):
+
+    trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(
+        data, 5400, 5400*2, testSize=0.3)
+
+    #X_test = testDf.values[:, :testDf.shape[1] - 2]
+    #y_test = testDf.values[:, testDf.shape[1] - 1]
+
+    # using subsequences, splitting the entire month data into days
+    X_test = np.array_split(np.array(testDf.values[:, :testDf.shape[1] - 2], dtype=np.uint8), 30)
+    y_test = np.array_split(np.array(testDf.values[:, testDf.shape[1] - 1], dtype=np.uint8), 30)
 
 
-if __name__=="__main__":
+    tagger = pycrfsuite.Tagger()
+    tagger.open('house_a.crfsuite')
+    #print "Predict" , tagger.tag([X_test[5]])
+    #print "Correct", y_test[5]
+    y_pred = [tagger.tag(xseq) for xseq in X_test]
+    compare = zip(y_test, y_pred)
+    correct = [x for x in compare if x[0] == x[1]]
+    print('Accuracy: {}'.format(float(len(correct))/len(compare)))
+    # TODO confusion matrix ;
+    # classificaiton report:
+
+
+def parseArgs(args):
+    parser = argparse.ArgumentParser(
+        description='CRF. Written in Python 2.7.',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('-d', '--data',
+                        default=('../data/kasteren/2010/datasets/houseA/'
+                                 'data.csv.gz'),
+                        help=('Time series of sensor values and activity '
+                              'labels.'))
+    return parser.parse_args()
+
+
+
+if __name__ == '__main__':
     main()

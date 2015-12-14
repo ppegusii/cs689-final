@@ -1,1 +1,13 @@
-{"activities": {"0": "idle", "1": "leave house", "3": "Eating", "4": "use toilet", "5": "take shower", "6": "brush teeth", "10": "go to bed", "13": "prepare Breakfast", "15": "prepare Dinner", "16": "get snack", "17": "get drink", "18": "put items in dishwasher", "19": "unload dishwasher", "20": "store groceries", "22": "put clothes in washingmachine", "23": "unload washingmachine", "25": "receive guest"}, "sensors": {"1": "Microwave", "5": "Hall-Toilet door", "6": "Hall-Bathroom door", "7": "Cups cupboard", "8": "Fridge", "9": "Plates cupboard", "12": "Frontdoor", "13": "Dishwasher", "14": "ToiletFlush", "17": "Freezer", "18": "Pans Cupboard", "20": "Washingmachine", "23": "Groceries Cupboard", "24": "Hall-Bedroom door"}}
+{"activities": {
+"0": "idle", 
+"1": "leave house", 
+"3": "Eating", 
+"4": "use toilet", 
+"5": "take shower", 
+"6": "brush teeth", 
+"10": "go to bed", 
+"13": "prepare Breakfast", 
+"15": "prepare Dinner", 
+"16": "get snack", 
+"17": "get drink", 
+"18": "put items in dishwasher", "19": "unload dishwasher", "20": "store groceries", "22": "put clothes in washingmachine", "23": "unload washingmachine", "25": "receive guest"}, "sensors": {"1": "Microwave", "5": "Hall-Toilet door", "6": "Hall-Bathroom door", "7": "Cups cupboard", "8": "Fridge", "9": "Plates cupboard", "12": "Frontdoor", "13": "Dishwasher", "14": "ToiletFlush", "17": "Freezer", "18": "Pans Cupboard", "20": "Washingmachine", "23": "Groceries Cupboard", "24": "Hall-Bedroom door"}}

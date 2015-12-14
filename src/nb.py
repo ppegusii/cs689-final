@@ -15,7 +15,7 @@ def main():
 
 def classify(data):
     X_train, X_test, y_train, y_test = cross_validation.train_test_split(
-        data.values[:, 0 : data.shape[1] - 2],  # X features
+        data.values[:, 0:data.shape[1] - 2],  # X features
         data.values[:, data.shape[1] - 1],  # y labels
         test_size=0.3,
         random_state=0,
@@ -31,7 +31,7 @@ def classify(data):
         clf,
         X_train,
         y_train,
-        cv=10,
+        cv=4,
     )
     print('Cross validation scores: {}'.format(scores))
     print('Mean cross validation score: {}'.format(scores.mean()))

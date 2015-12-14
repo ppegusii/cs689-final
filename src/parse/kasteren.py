@@ -173,7 +173,8 @@ def activityNames(fileName):
 
 def parseArgs(args):
     parser = argparse.ArgumentParser(
-        description='Gate classifier. Written in Python 2.7.',
+        description=('Parse Kasteren data into canonical form. '
+                     'Written in Python 2.7.'),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-A', '--activity_names',
                         default=('../../data/kasteren/2010/datasets/houseA/'

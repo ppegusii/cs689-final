@@ -11,7 +11,13 @@ import sys
 
 def main():
     args = parseArgs(sys.argv)
-    data = load.data(args.data)
+    if args.source == 'k':
+        data = load.data(args.data)
+    elif args.source == 't':
+        data = load.tulum(args.data, dtype_str=True)
+    else:
+        print('Invalid data source specified: {}'.format(args.source))
+        sys.exit(1)
     classify(data)
 
 
@@ -125,6 +131,9 @@ def parseArgs(args):
                                  'data.csv.gz'),
                         help=('Time series of sensor values and activity '
                               'labels.'))
+    parser.add_argument('-s', '--source',
+                        default='k',
+                        help=('Source of data Kaseteren or Tulum. {k, t}'))
     return parser.parse_args()
 
 

@@ -177,33 +177,36 @@ def parseArgs(args):
                      'Written in Python 2.7.'),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-A', '--activity_names',
-                        default=('../../data/kasteren/2010/datasets/houseA/'
+                        default=('../../data/kasteren/2010/datasets/houseC/'
                                  'activity_names.txt'),
                         help='File containing acitivity names.')
     parser.add_argument('-a', '--activity_labels',
-                        default=('../../data/kasteren/2010/datasets/houseA/'
+                        default=('../../data/kasteren/2010/datasets/houseC/'
                                  'activity_labels.txt'),
                         help='File containing activity labels.')
     parser.add_argument('-S', '--sensor_names',
-                        default=('../../data/kasteren/2010/datasets/houseA/'
+                        default=('../../data/kasteren/2010/datasets/houseC/'
                                  'sensor_names.txt'),
                         help='File containing sensor names.')
     parser.add_argument('-s', '--sensor_values',
-                        default=('../../data/kasteren/2010/datasets/houseA/'
+                        default=('../../data/kasteren/2010/datasets/houseC/'
                                  'sensor_values.txt'),
                         help='File containing sensor values.')
     parser.add_argument('-D', '--data',
-                        default='./data.csv.gz',
+                        default=('../../data/kasteren/2010/datasets/houseC/'
+                                 'data.csv.gz'),
                         help=('Time series of sensor values and activity '
                               'labels.'))
     parser.add_argument('-r', '--resampled_data',
-                        default='./resampled_data.csv.gz',
+                        default=('../../data/kasteren/2010/datasets/houseC/'
+                                 'resampled_data.csv.gz'),
                         help=('Resampled time series of sensor values and '
                               'activity labels.'
                               'Resampling results in the non-zero majority '
                               'unless zero is the only value.'))
     parser.add_argument('-n', '--names',
-                        default='./names.json',
+                        default=('../../data/kasteren/2010/datasets/houseC/'
+                                 'names.json'),
                         help='Activity and sensor name maps in JSON.')
     parser.add_argument('-t', '--timestep',
                         default='T',

@@ -2,7 +2,7 @@
 from __future__ import print_function
 import argparse
 import load
-from sklearn import cross_validation
+from sklearn import cross_validation, grid_search
 from sklearn.naive_bayes import BernoulliNB
 import sys
 
@@ -17,20 +17,27 @@ def classify(data):
     X_train, X_test, y_train, y_test = cross_validation.train_test_split(
         data.values[:, 0 : data.shape[1] - 2],  # X features
         data.values[:, data.shape[1] - 1],  # y labels
-        test_size=0.7,
+        test_size=0.3,
         random_state=0,
     )
-    clf = BernoulliNB()
+    params = {
+        'alpha': [0, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1]
+    }
+    nb = BernoulliNB()
+    clf = grid_search.GridSearchCV(nb, params)
     clf.fit(X_train, y_train)
-    print(clf.score(X_test, y_test))
+    print('clf.best_estimator_ = {:s}'.format(clf.best_estimator_))
     scores = cross_validation.cross_val_score(
         clf,
-        data.values[:, 0 : data.shape[1] - 2],
-        data.values[:, data.shape[1] - 1],
+        X_train,
+        y_train,
         cv=10,
     )
-    print(scores)
-    print(scores.mean())
+    print('Cross validation scores: {}'.format(scores))
+    print('Mean cross validation score: {}'.format(scores.mean()))
+    print('Standard deviation in cross validation score: {}'.format(
+        scores.std()))
+    print('Test score: {}'.format(clf.score(X_test, y_test)))
 
 
 def parseArgs(args):

@@ -22,6 +22,7 @@ def classify(data):
     #     data, 10800, 10800*2, testSize=0.3)
     trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(
         data, 5400, 5400*2, testSize=0.3)
+
     # trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(
     #     data, 5400, 5400*2, testSize=0.1)
     # trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(

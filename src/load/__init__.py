@@ -10,13 +10,23 @@ import pandas as pd
 # N is the number of timesteps.
 # M is the number of sensors.
 # The last column is the activity label.
-def data(fileName):
+def data(fileName, dtype_str=False):
+
     with gzip.open(fileName, 'rb') as f:
-        df = pd.read_csv(
-            f,
-            parse_dates=[0],
-            index_col=0,
-        )
+        if dtype_str:
+            df = pd.read_csv(
+                f,
+                parse_dates=[0],
+                index_col=0,
+                dtype=object
+             )
+        else:
+            df = pd.read_csv(
+                f,
+                parse_dates=[0],
+                index_col=0
+             )
+
     return df
 
 

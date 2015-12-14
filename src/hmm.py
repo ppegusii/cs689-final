@@ -35,11 +35,12 @@ def classify(data):
     y_train = trainDf.values[:, trainDf.shape[1] - 1]
     X_test = testDf.values[:, :testDf.shape[1] - 2]
     y_test = testDf.values[:, testDf.shape[1] - 1]
-    # clf = MultinomialHMM(decode='viterbi', alpha=0.01)
+    clf = MultinomialHMM(decode='viterbi', alpha=0.01)
     clf = gridSearch(
         trainDf,
         trainLens,
-        decodes=['viterbi', 'bestfirst'],
+        # decodes=['viterbi', 'bestfirst'],
+        decodes=['viterbi'],
         alphas=[0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1],
     )
     print('best_estimator = {:s}'.format(clf))
@@ -51,6 +52,9 @@ def classify(data):
     clf.fit(X_train, y_train, trainLens)
     y_pred = clf.predict(X_test, testLens)
     print('Accuracy: {}'.format(accuracy(y_test, y_pred)))
+    # print('Predicted label counts: {}'.format(
+    #   pd.Series(y_pred).value_counts()))
+    # print('True label counts: {}'.format(pd.Series(y_test).value_counts()))
 
 
 def accuracy(y_test, y_pred):
@@ -69,7 +73,7 @@ def gridSearch(seqs, lens, decodes=[], alphas=[]):
             if meanAcc > maxAcc:
                 maxAcc = meanAcc
                 bestClf = clf
-    return clf
+    return bestClf
 
 
 def crossValidate(clf, seqs, lens, folds=4):
@@ -90,7 +94,7 @@ def crossValidate(clf, seqs, lens, folds=4):
             endIdx = startIdx + leng
             seq = seqs.iloc[startIdx:endIdx, :]
             startIdx = endIdx
-            if j%folds == i:
+            if j % folds == i:
                 testSeqs.append(seq)
                 testLens.append(leng)
             else:

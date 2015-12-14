@@ -37,7 +37,7 @@ def classify(data):
     X_test = testDf.values[:, :testDf.shape[1] - 2]
     y_test = testDf.values[:, testDf.shape[1] - 1]
     clf = MultinomialHMM(decode='viterbi', alpha=0.01)
-    clf = gridSearch(
+    clf, accuracies = gridSearch(
         trainDf,
         trainLens,
         # decodes=['viterbi', 'bestfirst'],
@@ -45,7 +45,7 @@ def classify(data):
         alphas=[0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1],
     )
     print('best_estimator = {:s}'.format(clf))
-    accuracies = crossValidate(clf, trainDf, trainLens)
+    # accuracies = crossValidate(clf, trainDf, trainLens)
     print('Cross validation accuracies: {}'.format(accuracies))
     print('Mean cross validation accuracy: {}'.format(accuracies.mean()))
     print('Standard deviation in cross validation accuracy: {}'.format(
@@ -66,15 +66,18 @@ def accuracy(y_test, y_pred):
 
 def gridSearch(seqs, lens, decodes=[], alphas=[]):
     maxAcc = 0.0
+    maxAccs = None
     bestClf = None
     for decode in decodes:
         for alpha in alphas:
             clf = MultinomialHMM(decode=decode, alpha=alpha)
-            meanAcc = crossValidate(clf, seqs, lens).mean()
+            accs = crossValidate(clf, seqs, lens)
+            meanAcc = accs.mean()
             if meanAcc > maxAcc:
                 maxAcc = meanAcc
+                maxAccs = accs
                 bestClf = clf
-    return bestClf
+    return bestClf, maxAccs
 
 
 def crossValidate(clf, seqs, lens, folds=4):

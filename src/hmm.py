@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import argparse
+import itertools
 import load
 import numpy as np
 import pandas as pd
@@ -42,13 +43,14 @@ def classify(data):
     y_train = trainDf.values[:, trainDf.shape[1] - 1]
     X_test = testDf.values[:, :testDf.shape[1] - 2]
     y_test = testDf.values[:, testDf.shape[1] - 1]
-    clf = MultinomialHMM(decode='viterbi', alpha=0.01)
+    # clf = MultinomialHMM(decode='viterbi', alpha=0.01)
     clf, accuracies = gridSearch(
         trainDf,
         trainLens,
-        # decodes=['viterbi', 'bestfirst'],
-        decodes=['viterbi'],
+        decodes=['viterbi', 'bestfirst'],
+        # decodes=['viterbi'],
         alphas=[0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1],
+        init_eq_anys=[True, False],
     )
     print('best_estimator = {:s}'.format(clf))
     # accuracies = crossValidate(clf, trainDf, trainLens)
@@ -70,10 +72,19 @@ def accuracy(y_test, y_pred):
     return float(len(correct))/len(compare)
 
 
-def gridSearch(seqs, lens, decodes=[], alphas=[]):
+def gridSearch(seqs, lens, decodes=[None], alphas=[None], init_eq_anys=[None]):
     maxAcc = 0.0
     maxAccs = None
     bestClf = None
+    for d, a, i in itertools.product(*[decodes, alphas, init_eq_anys]):
+        clf = MultinomialHMM(decode=d, alpha=a, init_eq_any=i)
+        accs = crossValidate(clf, seqs, lens)
+        meanAcc = accs.mean()
+        if meanAcc > maxAcc:
+            maxAcc = meanAcc
+            maxAccs = accs
+            bestClf = clf
+    '''
     for decode in decodes:
         for alpha in alphas:
             clf = MultinomialHMM(decode=decode, alpha=alpha)
@@ -83,6 +94,7 @@ def gridSearch(seqs, lens, decodes=[], alphas=[]):
                 maxAcc = meanAcc
                 maxAccs = accs
                 bestClf = clf
+    '''
     return bestClf, maxAccs
 
 

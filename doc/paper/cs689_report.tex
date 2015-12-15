@@ -88,12 +88,15 @@ CRF is a discriminative undirected probabilistic graphical model naturally appli
 Another important advantage of CRFs is that we can make the potentials (or factors) of the model be data-dependent. For example, in image processing applications, we may “turn off” the label smoothing between two neighboring nodes s and t if there is an observed discontinuity in the image intensity between pixels s and t. Similarly, in natural language processing problems, we can make the latent labels depend on global properties of the sentence. 
 
 \item SVM - 
+The implementation used in this experiment comes from SVM
 
 \item SSVM - 
 
 \item Naive Bayes
 	\end{enumerate}
-	
+The idea of the naive Bayes classifier is to use a generative model of text to estimate
+
+
 The datasets available to us are:
 	\begin{enumerate}
 \item Kasteren dataset - has over a month long sensor information from 3 homes.
@@ -104,9 +107,15 @@ The datasets available to us are:
  - 1 week for analyzing with different dataset; and writing it up. 
  - 
 
-\section{Experiment and Evaluation}
+\section{Experimental Evaluation}
+
+\subsection{Datasets}
 
 \subsection{Experimental Setup}
+
+\subsection{Comparative Analysis Metrics}
+
+\subsection{Experiments}
 
 	Activity recognition is the problem of determining an individual's or group's activities given some sensor data describing their actions.
 	More formally, activity recognition finds a function that maps a sequence of sensor readings (feature vectors), to a sequence of activity labels that best describes the sensor data.

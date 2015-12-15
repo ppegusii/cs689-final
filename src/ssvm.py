@@ -62,7 +62,7 @@ def test_SSVM(ssvm, X_test, y_test):
     #accuracy = ssvm.score(X_test, y_test)
     print("Test score with chain CRF: %f" % accuracy )
 
-
+    return accuracy
 
 # used to replace the labels with the new labels that starts with 0;
 def replace(l, label_map):
@@ -130,7 +130,7 @@ def classify(data, house, f):
         accuracy = test_SSVM(clf, X_test1, y_test1)
         #save the model
 
-        output = open('ssvm_models/ssvm_' + house + f + + str(i)+ '.pkl', 'wb')
+        output = open('ssvm_models/ssvm_' + house + f + str(i)+ '.pkl', 'wb')
         pickle.dump(clf, output)
 
         clfs.append(clf)

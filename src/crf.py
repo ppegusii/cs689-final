@@ -31,7 +31,7 @@ def s2features(s):
 def main():
     # args = parseArgs(sys.argv)
 
-    for house in [ 'B' , 'C']:
+    for house in [ 'A', 'B' , 'C']:
         for f in ['last', 'change', 'data']:
             loc = data_loc_str.format(house=house,feature=f)
             #load the data
@@ -69,6 +69,7 @@ def main():
                 accuracies.append(accuracy)
 
             print accuracies
+            exit()
 
             #train_model(trainDf)
             #test_model(testDf)

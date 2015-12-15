@@ -104,16 +104,22 @@ The datasets available to us are:
 \item Kasteren dataset - has over a month long sensor information from 3 homes.
 \item Tulum dataset - more than six month period from a single home
 	\end{enumerate}
-\section{ Timeline for finishing the project. }
- - 2.5 weeks for implementing these modeling methods. \\
- - 1 week for analyzing with different dataset; and writing it up. 
- - 
+
 
 \section{Experimental Evaluation}
 
 \subsection{Datasets}
 
 \subsection{Experimental Setup}
+
+\subsection{Feather Representation}
+
+ Raw
+
+Changepoint
+
+Last-fired
+
 
 \subsection{Comparative Analysis Metrics}
 
@@ -132,6 +138,8 @@ Accuracy = \frac{TP+TN}{TP+TN+FP+FN}
 \begin{equation}
 F-Measure = \frac{2\cdot Precision\cdot Recall}{Precison+Recall}
 \end{equation}
+
+The Matthews correlation coefficient is used in machine learning as a measure of the quality of binary (two-class) classifications, introduced by biochemist Brian W. Matthews in 1975. It takes into account true and false positives and negatives and is generally regarded as a balanced measure which can be used even if the classes are of very different sizes. The MCC is in essence a correlation coefficient between the observed and predicted binary classifications; it returns a value between −1 and +1. A coefficient of +1 represents a perfect prediction, 0 no better than random prediction and −1 indicates total disagreement between prediction and observation.
 
 \begin{equation}
 MCC=\frac{TP\cdot TN-FP\cdot FN}{\sqrt{(TP+FP)\cdot (TP+FN)\cdot (TN+FP)\cdot (TN+FN)}}

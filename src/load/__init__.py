@@ -30,6 +30,49 @@ def data(fileName, dtype_str=False):
     return df
 
 
+def tulum(fileName, dtype_str=False):
+
+    with open(fileName, 'rb') as f:
+        if dtype_str:
+            df = pd.read_csv(
+                f,
+                parse_dates=[0],
+                index_col=0,
+                # dtype=object,
+                # dtype=float,
+                dtype=int,
+                header=None,
+                skiprows=(
+                    range(311113, 311115) +  # ON4
+                    range(392196, 392200) +  # O
+                    range(561572, 561581) +  # O
+                    range(598273, 598281) +  # O
+                    [901003]),  # OF
+                usecols=(
+                    range(0, 13) +
+                    range(18, 38)),
+             )
+        else:
+            df = pd.read_csv(
+                f,
+                parse_dates=[0],
+                index_col=0,
+                header=None,
+                skiprows=(
+                    range(311113, 311115) +  # ON4
+                    range(392196, 392200) +  # O
+                    range(561572, 561581) +  # O
+                    range(598273, 598281) +  # O
+                    [901003]),  # OF
+                usecols=(
+                    range(0, 13) +
+                    range(18, 38)),
+             )
+
+    # return df.drop(df.columns[[13,14,15,16,17]], axis=1)
+    return df
+
+
 # Given a name file, such as
 # 'data/kasteren/2010/datasets/houseA/names.json'
 # this function returns the following map of maps:

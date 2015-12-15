@@ -9,7 +9,8 @@ import sys
 import pycrfsuite
 import numpy as np
 
-from sklearn.cross_validation import KFold
+from sklearn.cross_validation import KFold, StratifiedKFold
+
 
 data_loc_str = '../data/kasteren/2010/datasets/house{house}/{feature}.csv.gz'
 from collections import Counter
@@ -31,8 +32,8 @@ def s2features(s):
 def main():
     # args = parseArgs(sys.argv)
 
-    for house in [ 'A', 'B' , 'C']:
-        for f in ['last', 'change', 'data']:
+    for house in [  'A', 'B' , 'C']:
+        for f in ['data', 'last', 'change']:
             loc = data_loc_str.format(house=house,feature=f)
             #load the data
             data = load.data(loc, dtype_str=True)
@@ -42,8 +43,6 @@ def main():
             #    data, 5400, 5400*2, testSize=0.3)
 
 
-            X_train = np.array(np.array_split(data.values[:, :data.shape[1] - 2], 10))
-            y_train = np.array(np.array_split(data.values[:, data.shape[1] - 1], 10))
 
             #### WITHOUT CROSSVALID
             #X_test = np.array_split(np.array(testDf.values[:, :testDf.shape[1] - 2], dtype=np.uint8),2)
@@ -52,7 +51,17 @@ def main():
             #test_CRF(X_train, X_test, y_train, y_test, house, f,999)
             #exit()
             #### WITHOUT CROSSVALID
-            kf = KFold(len(X_train), n_folds=5)
+            #kfold
+            #X_train = np.array(np.array_split(data.values[:, :data.shape[1] - 2], 10))
+            #y_train = np.array(np.array_split(data.values[:, data.shape[1] - 1], 10))
+            #kf = KFold(len(X_train), n_folds=5)
+            #kfold
+
+            #strat
+            X_train = np.array(data.values[:, :data.shape[1] - 2])
+            y_train = np.array(data.values[:, data.shape[1] - 1])
+            kf = StratifiedKFold(data['activity'], n_folds=5)
+
 
             clfs = []
             accuracies = []
@@ -61,6 +70,14 @@ def main():
                 print("TRAIN:", train_index, "TEST:", test_index)
                 X_train1, X_test1 = X_train[train_index], X_train[test_index]
                 y_train1, y_test1 = y_train[train_index], y_train[test_index]
+
+
+                #stratfied
+                X_train1 = np.array_split(X_train1, 100)
+                X_test1 = np.array_split(X_test1, 10)
+                y_train1 = np.array_split(y_train1, 100)
+                y_test1 = np.array_split(y_test1, 10)
+                #strat
 
                 train_CRF(X_train1, y_train1, house, f, i)
 
@@ -80,9 +97,9 @@ def train_CRF(X_train, y_train, house, f,i ):
 
     X_train = np.concatenate([np.array_split(x, 20) for x in X_train])
     y_train = np.concatenate([np.array_split(y, 20) for y in y_train])
-    print len(X_train)
+    #print len(X_train)
 
-    print X_train[0].shape, y_train[0].shape
+    #print X_train[0].shape, y_train[0].shape
 
     for xseq, yseq in zip(X_train, y_train):
         trainer.append(xseq, yseq)
@@ -95,13 +112,13 @@ def train_CRF(X_train, y_train, house, f,i ):
         'feature.possible_transitions': False
     })
 
-    model_name = 'crf_models/house_' + house + '_'+ f + str(i) + '.crfsuite'
+    model_name = 'crf_models/house_' + house + '_'+ f + str(i) + '.crfsuite.t'
     trainer.train(model_name)
     print str(i),'. House:', house, '. Feature: ', f, ' training complete.'
 
 
 def test_CRF( X_test, y_test, house, f, i ):
-    model_name = 'crf_models/house_' + house + '_'+ f + str(i) + '.crfsuite'
+    model_name = 'crf_models/house_' + house + '_'+ f + str(i) + '.crfsuite.t'
 
     X_test = [s2features(s) for s in X_test]
 

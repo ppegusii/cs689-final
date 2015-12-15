@@ -77,13 +77,20 @@ So, in this project we would like to predict a label (i.e. the activity) given a
 
 \end{enumerate}
 
-\section{Methods}
+\section{Recognizing Methods}
 We would like to explore the following techniques:
 	\begin{enumerate}
 \item HMM - 
+Hidden Markov Modes (HMM) are a buiqutious tool for modelling time serises  data.  HMMs can be used as black-box density models on sequences. They have the advantage over Markov models in that they can represent long-range dependencies between observations, mediated via the latent variables. 
+
 \item CRF - 
+CRF is a discriminative undirected probabilistic graphical model naturally applicable to sequence labeling tasks. A conditional random field or CRF (Lafferty et al. 2001), sometimes a discriminative random field (Kumar and Hebert 2003), is  a version of an MRF where all the clique potentials are conditioned on input features. The advantage of a CRF over an MRF is analogous to the advantage of a discriminative classifier over a generative classifier (see Section 8.6), namely, we don’t need to “waste resources” modeling things that we always observe. Instead we can focus our attention on modeling what we care about, namely the distribution of labels given the data.
+Another important advantage of CRFs is that we can make the potentials (or factors) of the model be data-dependent. For example, in image processing applications, we may “turn off” the label smoothing between two neighboring nodes s and t if there is an observed discontinuity in the image intensity between pixels s and t. Similarly, in natural language processing problems, we can make the latent labels depend on global properties of the sentence. 
+
 \item SVM - 
+
 \item SSVM - 
+
 \item Naive Bayes
 	\end{enumerate}
 	
@@ -97,7 +104,10 @@ The datasets available to us are:
  - 1 week for analyzing with different dataset; and writing it up. 
  - 
 
-\section{Introduction}
+\section{Experiment and Evaluation}
+
+\subsection{Experimental Setup}
+
 	Activity recognition is the problem of determining an individual's or group's activities given some sensor data describing their actions.
 	More formally, activity recognition finds a function that maps a sequence of sensor readings (feature vectors), to a sequence of activity labels that best describes the sensor data.
 	We focus on activity recognition within home based wireless sensor networks.
@@ -116,4 +126,6 @@ The datasets available to us are:
 	These methods include Hidden Markov Models, Conditional Random Fields, and Support Vector Machines.
 	We will apply these methods to at least four datasets that vary in duration, home size, and sensor counts, which are not necessarily proportional to home size.
 	By applying these techniques to real-world datasets and explaining the differences and similarities in their performances, we will gain a deeper understanding of machine learning.
+
+\section{Discussion and Future Work}
 \end{document}  

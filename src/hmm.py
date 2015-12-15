@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import argparse
+import gzip
 import itertools
+import json
 import load
 import numpy as np
 import pandas as pd
+import pickle
 from seqlearn.hmm import MultinomialHMM
 import split
 import sys
@@ -19,10 +22,10 @@ def main():
     else:
         print('Invalid data source specified: {}'.format(args.source))
         sys.exit(1)
-    classify(data)
+    classify(data, args.clfFile, args.resultsFile)
 
 
-def classify(data):
+def classify(data, clfFileName, resultsFile):
     # trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(
     #     data, 86400, 86400*2, testSize=0.3)
     # trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(
@@ -47,11 +50,13 @@ def classify(data):
     clf, accuracies = gridSearch(
         trainDf,
         trainLens,
-        decodes=['viterbi', 'bestfirst'],
-        # decodes=['viterbi'],
-        alphas=[0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1],
+        # decodes=['viterbi', 'bestfirst'],
+        decodes=['viterbi'],
+        # alphas=[0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1],
+        alphas=[0.000001, 1],
         init_eq_anys=[True, False],
     )
+    saveClf(clf, clfFileName)
     print('best_estimator = {:s}'.format(clf))
     # accuracies = crossValidate(clf, trainDf, trainLens)
     print('Cross validation accuracies: {}'.format(accuracies))
@@ -64,6 +69,22 @@ def classify(data):
     # print('Predicted label counts: {}'.format(
     #   pd.Series(y_pred).value_counts()))
     # print('True label counts: {}'.format(pd.Series(y_test).value_counts()))
+    saveResults(y_pred, y_test, accuracies, resultsFile)
+
+
+def saveClf(clf, fileName):
+    with open(fileName, 'w') as f:
+        pickle.dump(clf, f)
+
+
+def saveResults(y_pred, y_true, accuracies, fileName):
+    results = {
+        'y_pred': y_pred.tolist(),
+        'y_true': y_true.tolist(),
+        'acc': accuracies.tolist()
+    }
+    with gzip.open(fileName, 'w') as f:
+        json.dump(results, f)
 
 
 def accuracy(y_test, y_pred):
@@ -146,6 +167,10 @@ def parseArgs(args):
     parser.add_argument('-s', '--source',
                         default='k',
                         help=('Source of data Kaseteren or Tulum. {k, t}'))
+    parser.add_argument('-c', '--clfFile',
+                        help=('File to save best trained classifier.')),
+    parser.add_argument('-r', '--resultsFile',
+                        help=('File to save y_true, y_pred.')),
     return parser.parse_args()
 
 

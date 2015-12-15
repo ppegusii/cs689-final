@@ -10,6 +10,8 @@ import pycrfsuite
 import numpy as np
 
 from sklearn.cross_validation import KFold, StratifiedKFold
+import json
+import gzip
 
 
 data_loc_str = '../data/kasteren/2010/datasets/house{house}/{feature}.csv.gz'
@@ -37,6 +39,7 @@ def main():
             loc = data_loc_str.format(house=house,feature=f)
             #load the data
             data = load.data(loc, dtype_str=True)
+            res_obj = {"y_pred":[], "y_true":[], "acc":[]}
 
             #split data into training and testing
             #trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(
@@ -52,16 +55,16 @@ def main():
             #exit()
             #### WITHOUT CROSSVALID
             #kfold
-            #X_train = np.array(np.array_split(data.values[:, :data.shape[1] - 2], 10))
-            #y_train = np.array(np.array_split(data.values[:, data.shape[1] - 1], 10))
-            #kf = KFold(len(X_train), n_folds=5)
+            X_train = np.array(np.array_split(data.values[:, :data.shape[1] - 2], 10))
+            y_train = np.array(np.array_split(data.values[:, data.shape[1] - 1], 10))
+            kf = KFold(len(X_train), n_folds=5)
             #kfold
 
             #strat
-            X_train = np.array(data.values[:, :data.shape[1] - 2])
-            y_train = np.array(data.values[:, data.shape[1] - 1])
-            kf = StratifiedKFold(data['activity'], n_folds=5)
-
+            #X_train = np.array(data.values[:, :data.shape[1] - 2])
+            #y_train = np.array(data.values[:, data.shape[1] - 1])
+            #kf = StratifiedKFold(data['activity'], n_folds=5)
+            #strat
 
             clfs = []
             accuracies = []
@@ -73,20 +76,32 @@ def main():
 
 
                 #stratfied
-                X_train1 = np.array_split(X_train1, 100)
-                X_test1 = np.array_split(X_test1, 10)
-                y_train1 = np.array_split(y_train1, 100)
-                y_test1 = np.array_split(y_test1, 10)
+                #X_train1 = np.array_split(X_train1, 100)
+                #X_test1 = np.array_split(X_test1, 10)
+                #y_train1 = np.array_split(y_train1, 100)
+                #y_test1 = np.array_split(y_test1, 10)
                 #strat
 
-                train_CRF(X_train1, y_train1, house, f, i)
+                #train_CRF(X_train1, y_train1, house, f, i)
 
-                clf, accuracy = test_CRF(X_test1, y_test1, house, f, i)
-                clfs.append(clf)
+                accuracy, y_pred, y_true = test_CRF(X_test1, y_test1, house, f, i)
+
+                obj = {"y_pred":y_pred.tolist(), "y_true":y_true.tolist(), "acc":accuracy}
+                #write the results:
+                with gzip.open('crf_models/crf_' + house + f + str(i)+ '.json.gz', 'w') as out:
+                    json.dump(obj, out)
+
+                #clfs.append(clf)
                 accuracies.append(accuracy)
+                res_obj['y_pred'].append(y_pred.tolist())
+                res_obj['y_true'].append(y_true.tolist())
+                res_obj['acc'].append(accuracy)
 
             print accuracies
-            exit()
+            with gzip.open('crf_models/crf_' + house + f +'_all.json.gz', 'w') as out:
+                json.dump(res_obj, out)
+
+
 
             #train_model(trainDf)
             #test_model(testDf)
@@ -95,8 +110,8 @@ def train_CRF(X_train, y_train, house, f,i ):
     X_train = [s2features(s) for s in X_train]
     trainer = pycrfsuite.Trainer( verbose=False)
 
-    X_train = np.concatenate([np.array_split(x, 20) for x in X_train])
-    y_train = np.concatenate([np.array_split(y, 20) for y in y_train])
+    #X_train = np.concatenate([np.array_split(x, 20) for x in X_train])
+    #y_train = np.concatenate([np.array_split(y, 20) for y in y_train])
     #print len(X_train)
 
     #print X_train[0].shape, y_train[0].shape
@@ -112,13 +127,13 @@ def train_CRF(X_train, y_train, house, f,i ):
         'feature.possible_transitions': False
     })
 
-    model_name = 'crf_models/house_' + house + '_'+ f + str(i) + '.crfsuite.t'
+    model_name = 'crf_models/house_' + house + '_'+ f + str(i) + '.crfsuite'
     trainer.train(model_name)
     print str(i),'. House:', house, '. Feature: ', f, ' training complete.'
 
 
 def test_CRF( X_test, y_test, house, f, i ):
-    model_name = 'crf_models/house_' + house + '_'+ f + str(i) + '.crfsuite.t'
+    model_name = 'crf_models/house_' + house + '_'+ f + str(i) + '.crfsuite'
 
     X_test = [s2features(s) for s in X_test]
 
@@ -136,7 +151,7 @@ def test_CRF( X_test, y_test, house, f, i ):
 
     print('Accuracy: ', accuracy)
     #print y_pred
-    return house+f+str(i), accuracy
+    return accuracy, y_pred, y_test
 
 def print_info(tagger):
     info = tagger.info()

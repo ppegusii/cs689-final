@@ -8,6 +8,9 @@ import sys
 from sklearn.cross_validation import KFold, StratifiedKFold
 import pickle
 from sklearn.metrics import confusion_matrix
+import json
+import gzip
+import os.path
 
 data_loc_str = '../data/kasteren/2010/datasets/house{house}/{feature}.csv.gz'
 
@@ -18,7 +21,7 @@ def main():
             loc = data_loc_str.format(house=house,feature=f)
             data = load.data(loc)
             classify(data, house, f)
-
+            #exit()
 
 # Using pystruct
 def train_SSVM(X_train, y_train):
@@ -60,9 +63,9 @@ def test_SSVM(ssvm, X_test, y_test):
     #print confusion_matrix(y_test, y_pred)
 
     #accuracy = ssvm.score(X_test, y_test)
-    print("Test score with chain CRF: %f" % accuracy )
+    print("Test score with chain CRF SSVM: %f" % accuracy )
+    return accuracy, y_pred, y_test
 
-    return accuracy
 
 # used to replace the labels with the new labels that starts with 0;
 def replace(l, label_map):
@@ -76,11 +79,14 @@ def relabel(data):
     y = replace(y, labels_map)
     data['activity'] = y
     #print np.unique(y)
-    return data
+    old_labels = {y:x for x,y in labels_map.iteritems()}
+    return data, old_labels
 
 
 def classify(data, house, f):
-    data = relabel(data)
+    data, old_labels = relabel(data)
+    res_obj = {"y_pred":[], "y_true":[], "acc":[]}
+
     # WWW
     # dividing the data into training and testing
     #trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(
@@ -126,18 +132,39 @@ def classify(data, house, f):
 
         #print X_train1.shape,  y_train1.shape
         #print X_train1[0].shape,  y_train1[0].shape
-        clf = train_SSVM(X_train1, y_train1)
-        accuracy = test_SSVM(clf, X_test1, y_test1)
+
+        fname = 'ssvm_models/ssvm_' + house + f + str(i)+ '.pkl'
+        if os.path.isfile(fname):
+            pkl_file = open(fname, 'rb')
+            clf = pickle.load(pkl_file)
+            print i, ". Classifier Loaded:", house, f, clf
+        else:
+            clf = train_SSVM(X_train1, y_train1)
+            output = open(fname, 'wb')
+            pickle.dump(clf, output)
+
+        accuracy, y_pred, y_true = test_SSVM(clf, X_test1, y_test1)
+
+        y_pred = map(lambda x: old_labels[int(x)], y_pred)
+        y_true = map(lambda x: old_labels[int(x)], y_true)
+
         #save the model
+        res_obj['y_pred'].append(y_pred)
+        res_obj['y_true'].append(y_true)
+        res_obj['acc'].append(accuracy)
 
-        output = open('ssvm_models/ssvm_' + house + f + str(i)+ '.pkl', 'wb')
-        pickle.dump(clf, output)
+        obj = {"y_pred":y_pred, "y_true":y_true, "acc":accuracy}
+                #write the results:
+        with gzip.open('ssvm_models/ssvm_' + house + f + str(i)+ '.json.gz', 'w') as out:
+            json.dump(obj, out)
 
-        clfs.append(clf)
+        #clfs.append(clf)
         accuracies.append(accuracy)
 
     print 'House:', house, 'Feature:', f,
     print accuracies
+    with gzip.open('ssvm_models/ssvm_' + house + f +'_all.json.gz', 'w') as out:
+        json.dump(res_obj, out)
 
     #ssvm = clfs[np.argmax(accuracies)]
     #print "Learning complete..."

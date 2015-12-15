@@ -5,22 +5,23 @@ import argparse
 import load
 import split
 import sys
-from sklearn.cross_validation import KFold
+from sklearn.cross_validation import KFold, StratifiedKFold
 import pickle
+from sklearn.metrics import confusion_matrix
+
+data_loc_str = '../data/kasteren/2010/datasets/house{house}/{feature}.csv.gz'
 
 def main():
-    args = parseArgs(sys.argv)
-    data = load.data(args.data)
-
-     #split data into training and testing
-    trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(
-        data, 5400, 5400*2, testSize=0.3)
-
-    classify(data)
+    #args = parseArgs(sys.argv)
+    for house in [ 'C', 'B' , 'A']:
+        for f in ['last', 'change', 'data']:
+            loc = data_loc_str.format(house=house,feature=f)
+            data = load.data(loc)
+            classify(data, house, f)
 
 
 # Using pystruct
-def test_SSVM(X_train, X_test, y_train, y_test):
+def train_SSVM(X_train, y_train):
 
     #print X_train.shape, X_train[0].shape
 
@@ -46,10 +47,22 @@ def test_SSVM(X_train, X_test, y_train, y_test):
     #ssvm = OneSlackSSVM(model=model) #doesn't work as well
     ssvm.fit(X_train, y_train)
     print "Learning complete..."
-    accuracy = ssvm.score(X_test, y_test)
+
+    return ssvm
+
+def test_SSVM(ssvm, X_test, y_test):
+    y_pred = ssvm.predict(X_test)
+    #print len(y_pred), len(y_test)
+    y_pred = np.hstack(y_pred)
+    y_test = np.hstack(y_test)
+    #print len(y_pred), len(y_test)
+    accuracy = sum(y_pred == y_test)*1./len(y_pred)
+    #print confusion_matrix(y_test, y_pred)
+
+    #accuracy = ssvm.score(X_test, y_test)
     print("Test score with chain CRF: %f" % accuracy )
 
-    return ssvm, accuracy
+
 
 # used to replace the labels with the new labels that starts with 0;
 def replace(l, label_map):
@@ -62,62 +75,74 @@ def relabel(data):
     labels_map = dict( zip(labels, range(len(labels))))
     y = replace(y, labels_map)
     data['activity'] = y
-    print np.unique(y)
+    #print np.unique(y)
     return data
 
 
-def classify(data):
+def classify(data, house, f):
     data = relabel(data)
-
+    # WWW
     # dividing the data into training and testing
-    trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(
-        data, 5400, 5400*2, testSize=0.3)
+    #trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(
+    #    data, 5400, 5400*2, testSize=0.3)
 
     # e.g. structure of the array
     # X = [np.array([  [f1],[f2],[f3 ] ... [ N days], dtype=uint8 )]
     # Y = [np.array([   a, b , c])]
     # splitting so that we get a fraction of the day for training the labels
-    X_train = np.array(np.array_split(trainDf.values[:, :trainDf.shape[1] - 2], 10))
-    y_train = np.array(np.array_split(trainDf.values[:, trainDf.shape[1] - 1], 10))
+    #X_train = np.array(np.array_split(trainDf.values[:, :trainDf.shape[1] - 2], 10))
+    #y_train = np.array(np.array_split(trainDf.values[:, trainDf.shape[1] - 1], 10))
 
     # test dataset - dividing into subsequences
-    X_test = np.array(np.array_split(testDf.values[:, :testDf.shape[1] - 2], 30))
-    y_test = np.array(np.array_split(testDf.values[:, testDf.shape[1] - 1], 30))
-    print np.unique(np.concatenate(y_train).ravel())
-    print np.unique(np.concatenate(y_test).ravel())
+    #X_test = np.array(np.array_split(testDf.values[:, :testDf.shape[1] - 2], 30))
+    #y_test = np.array(np.array_split(testDf.values[:, testDf.shape[1] - 1], 30))
+    # WWW
 
+    X_train = np.array(data.values[:, :data.shape[1] - 2])
+    y_train = np.array(data.values[:, data.shape[1] - 1])
+
+    #print X_train.shape
     #test_SSVM(X_train, X_test, y_train, y_test)
     #exit()
     # 5 fold validation;
-    kf = KFold(len(X_train), n_folds=5)
+    #label = np.unique(data['activity'])
+    kf = StratifiedKFold(data['activity'], n_folds=5)
 
     clfs = []
     accuracies = []
     # cross validation
-    for train_index, test_index in kf:
+    for i, (train_index, test_index) in enumerate(kf):
         print("TRAIN:", train_index, "TEST:", test_index)
         X_train1, X_test1 = X_train[train_index], X_train[test_index]
         y_train1, y_test1 = y_train[train_index], y_train[test_index]
-        print X_train1.shape,  y_train1.shape
-        print X_train1[0].shape,  y_train1[0].shape
 
-        clf, accuracy = test_SSVM(X_train1, X_test1, y_train1, y_test1)
+        #print np.unique(np.concatenate(y_train1).ravel())
+        #print np.unique(np.concatenate(y_test1).ravel())
+        X_train1 = np.array_split(X_train1, 100)
+        X_test1 = np.array_split(X_test1, 10)
+        y_train1 = np.array_split(y_train1, 100)
+        y_test1 = np.array_split(y_test1, 10)
+
+
+        #print X_train1.shape,  y_train1.shape
+        #print X_train1[0].shape,  y_train1[0].shape
+        clf = train_SSVM(X_train1, y_train1)
+        accuracy = test_SSVM(clf, X_test1, y_test1)
+        #save the model
+
+        output = open('ssvm_models/ssvm_' + house + f + + str(i)+ '.pkl', 'wb')
+        pickle.dump(clf, output)
+
         clfs.append(clf)
         accuracies.append(accuracy)
 
+    print 'House:', house, 'Feature:', f,
     print accuracies
 
-    ssvm = clfs[np.argmax(accuracies)]
-    print "Learning complete..."
-    accuracy = ssvm.score(X_test, y_test)
-    print("Test score with chain CRF: %f" % accuracy )
-
-
-    from sklearn.metrics import confusion_matrix
-    confusion_matrix(y_true, y_pred)
-
-    output = open('ssvm_last.pkl', 'wb')
-    pickle.dump(clfs, output)
+    #ssvm = clfs[np.argmax(accuracies)]
+    #print "Learning complete..."
+    #accuracy = ssvm.score(X_test, y_test)
+    #print("Test score with chain CRF: %f" % accuracy )
 
 
     print "Learning SVM complete."

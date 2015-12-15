@@ -77,8 +77,8 @@ def train_CRF(X_train, y_train, house, f,i ):
     X_train = [s2features(s) for s in X_train]
     trainer = pycrfsuite.Trainer( verbose=False)
 
-    X_train = np.concatenate([np.array_split(x, 25) for x in X_train])
-    y_train = np.concatenate([np.array_split(y, 25) for y in y_train])
+    X_train = np.concatenate([np.array_split(x, 20) for x in X_train])
+    y_train = np.concatenate([np.array_split(y, 20) for y in y_train])
     print len(X_train)
 
     print X_train[0].shape, y_train[0].shape

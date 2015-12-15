@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import argparse
+import gzip
+import itertools
+import json
 import load
 import numpy as np
 import pandas as pd
+import pickle
 from seqlearn.hmm import MultinomialHMM
 import split
 import sys
@@ -18,10 +22,10 @@ def main():
     else:
         print('Invalid data source specified: {}'.format(args.source))
         sys.exit(1)
-    classify(data)
+    classify(data, args.clfFile, args.resultsFile)
 
 
-def classify(data):
+def classify(data, clfFileName, resultsFile):
     # trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(
     #     data, 86400, 86400*2, testSize=0.3)
     # trainDf, testDf, trainLens, testLens, testFrac = split.trainTest(
@@ -42,14 +46,17 @@ def classify(data):
     y_train = trainDf.values[:, trainDf.shape[1] - 1]
     X_test = testDf.values[:, :testDf.shape[1] - 2]
     y_test = testDf.values[:, testDf.shape[1] - 1]
-    clf = MultinomialHMM(decode='viterbi', alpha=0.01)
+    # clf = MultinomialHMM(decode='viterbi', alpha=0.01)
     clf, accuracies = gridSearch(
         trainDf,
         trainLens,
         # decodes=['viterbi', 'bestfirst'],
         decodes=['viterbi'],
-        alphas=[0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1],
+        # alphas=[0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1],
+        alphas=[0.000001, 1],
+        init_eq_anys=[True, False],
     )
+    saveClf(clf, clfFileName)
     print('best_estimator = {:s}'.format(clf))
     # accuracies = crossValidate(clf, trainDf, trainLens)
     print('Cross validation accuracies: {}'.format(accuracies))
@@ -62,6 +69,22 @@ def classify(data):
     # print('Predicted label counts: {}'.format(
     #   pd.Series(y_pred).value_counts()))
     # print('True label counts: {}'.format(pd.Series(y_test).value_counts()))
+    saveResults(y_pred, y_test, accuracies, resultsFile)
+
+
+def saveClf(clf, fileName):
+    with open(fileName, 'w') as f:
+        pickle.dump(clf, f)
+
+
+def saveResults(y_pred, y_true, accuracies, fileName):
+    results = {
+        'y_pred': y_pred.tolist(),
+        'y_true': y_true.tolist(),
+        'acc': accuracies.tolist()
+    }
+    with gzip.open(fileName, 'w') as f:
+        json.dump(results, f)
 
 
 def accuracy(y_test, y_pred):
@@ -70,10 +93,19 @@ def accuracy(y_test, y_pred):
     return float(len(correct))/len(compare)
 
 
-def gridSearch(seqs, lens, decodes=[], alphas=[]):
+def gridSearch(seqs, lens, decodes=[None], alphas=[None], init_eq_anys=[None]):
     maxAcc = 0.0
     maxAccs = None
     bestClf = None
+    for d, a, i in itertools.product(*[decodes, alphas, init_eq_anys]):
+        clf = MultinomialHMM(decode=d, alpha=a, init_eq_any=i)
+        accs = crossValidate(clf, seqs, lens)
+        meanAcc = accs.mean()
+        if meanAcc > maxAcc:
+            maxAcc = meanAcc
+            maxAccs = accs
+            bestClf = clf
+    '''
     for decode in decodes:
         for alpha in alphas:
             clf = MultinomialHMM(decode=decode, alpha=alpha)
@@ -83,6 +115,7 @@ def gridSearch(seqs, lens, decodes=[], alphas=[]):
                 maxAcc = meanAcc
                 maxAccs = accs
                 bestClf = clf
+    '''
     return bestClf, maxAccs
 
 
@@ -134,6 +167,10 @@ def parseArgs(args):
     parser.add_argument('-s', '--source',
                         default='k',
                         help=('Source of data Kaseteren or Tulum. {k, t}'))
+    parser.add_argument('-c', '--clfFile',
+                        help=('File to save best trained classifier.')),
+    parser.add_argument('-r', '--resultsFile',
+                        help=('File to save y_true, y_pred.')),
     return parser.parse_args()
 
 

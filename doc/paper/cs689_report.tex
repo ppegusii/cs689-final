@@ -7,6 +7,8 @@
 								% TeX will automatically convert eps --> pdf in pdflatex		
 \usepackage{amssymb}
 
+\usepackage{amsmath}
+
 \title{HomeActivity: Recognizing home activities using sensor data}
 \author{Stephen Lee, Patrick Pagus and Dong Chen}
 %\date{}							% Activate to display a given date or no date
@@ -16,7 +18,7 @@
 %\section{}
 %\subsection{}
 \section{Abstract:}
-HomeActivity: Recognizing home activities using sensor data. 
+Home activities recognizing allows many smart applications including healthcare and energy efficiency. 
 
 \section{Introduction}
 Activity recognition is the problem of determining an individual's or group's activities given some sensor data describing their actions.
@@ -114,6 +116,23 @@ The datasets available to us are:
 \subsection{Experimental Setup}
 
 \subsection{Comparative Analysis Metrics}
+
+\begin{equation}
+Precision = \frac{TP}{TP+FP}
+\end{equation}
+
+\begin{equation}
+Accuracy = \frac{TP+TN}{TP+TN+FP+FN}
+\end{equation}
+
+\begin{equation}
+F-Measure = \frac{2\cdot Precision\cdot Recall}{Precison+Recall}
+\end{equation}
+
+\begin{equation}
+MCC=\frac{TP\cdot TN-FP\cdot FN}{\sqrt{(TP+FP)\cdot (TP+FN)\cdot (TN+FP)\cdot (TN+FN)}}
+\end{equation}
+
 
 \subsection{Experiments}
 

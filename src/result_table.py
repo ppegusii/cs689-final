@@ -48,8 +48,9 @@ def main():
                 row['Precision'] = m['precision_score']*100
                 row['Recall'] = m['recall_score']*100
                 row['F-Measure'] = m['f1_score']*100
-                row['Accuracy'] = m['accuracy_score']*100
-                row['CV_Accuracy'] = '${:.1f}\pm{:.1f}$'.format(
+                # row['Accuracy'] = m['accuracy_score']*100
+                # row['CV_Accuracy'] = '${:.1f}\pm{:.1f}$'.format(
+                row['Accuracy'] = '${:.1f}\pm{:.1f}$'.format(
                     m['cv_acc_mean']*100, m['cv_acc_std']*100)
                 try:
                     cm = pd.DataFrame(m['confusion_matrix'])
@@ -85,12 +86,13 @@ def main():
             f.write('\\vspace{1cm}\\\\\n')
             df = pd.DataFrame(rowList, columns=['Model', 'Feature', 'Precision',
                                                 'Recall', 'F-Measure',
-                                                'Accuracy', 'CV_Accuracy'])
+                                                # 'Accuracy', 'CV_Accuracy'])
+                                                'Accuracy'])
             df.set_index(['Model', 'Feature'], inplace=True)
             tex = df.to_latex(float_format=lambda x: '{:.1f}'.format(x))
             tex = tex.replace('textbackslash', '')
             tex = tex.replace('\$', '$')
-            tex = tex.replace('{llrrrrl}', '{llrrrrr}')
+            tex = tex.replace('{llrrrl}', '{llrrrr}')
             f.write('{}'.format(tex))
             f.write('\\vspace{1cm}\\\\\n')
             # df.to_latex(f, formatters={'CV_Accuracy': lambda x: x})

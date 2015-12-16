@@ -97,6 +97,7 @@ def draw_graph(house, svm_arr, crf_arr, ssvm_arr, nb_arr, hmm_arr):
     autolabel(ax, rects3)
     autolabel(ax, rects4)
     autolabel(ax, rects5)
+    ax.set_ylim([0, 100])
 
     plt.tight_layout()
 

@@ -86,6 +86,7 @@ def relabel(data):
 def classify(data, house, f):
     data, old_labels = relabel(data)
     res_obj = {"y_pred":[], "y_true":[], "acc":[]}
+    data.iloc[::6]
 
     # WWW
     # dividing the data into training and testing

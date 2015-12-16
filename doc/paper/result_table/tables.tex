@@ -1,0 +1,79 @@
+\documentclass{article}
+\usepackage{booktabs}
+\begin{document}
+\textbf{House A}\\
+\vspace{1cm}\\
+\begin{tabular}{llrrrrl}
+\toprule
+    &        &  Precision &  Recall &  F-Measure &  Accuracy &    CV\_Accuracy \\
+Model & Feature &            &         &            &           &                \\
+\midrule
+HMM & Change &       36.9 &    35.2 &       31.8 &      71.2 &   $72.0\pm3.3$ \\
+    & Raw &       30.8 &    13.8 &       12.9 &      59.7 &   $58.0\pm1.2$ \\
+    & Last &       21.8 &    19.3 &       15.2 &      66.0 &   $66.6\pm3.0$ \\
+SVM & Change &       34.7 &    11.4 &        9.5 &      53.1 &  $53.1\pm11.0$ \\
+    & Raw &       33.2 &    17.0 &       17.4 &      60.6 &   $60.6\pm9.0$ \\
+    & Last &       26.7 &    27.9 &       27.3 &      93.7 &   $93.7\pm1.7$ \\
+SSVM & Change &       13.9 &    10.3 &        7.5 &      53.1 &   $53.1\pm0.0$ \\
+    & Raw &       23.0 &    15.2 &       15.3 &      61.3 &   $61.3\pm1.6$ \\
+    & Last &       30.3 &    29.2 &       28.9 &      93.7 &   $93.7\pm0.2$ \\
+CRF & Change &        3.1 &    10.0 &        4.8 &      31.3 &   $31.3\pm0.0$ \\
+    & Raw &       17.9 &    15.7 &       14.9 &      62.1 &   $62.1\pm0.0$ \\
+    & Last &       19.4 &    19.3 &       14.5 &      65.9 &   $65.9\pm0.0$ \\
+NB & Change &       38.1 &    11.6 &        9.9 &      53.2 &   $53.1\pm0.0$ \\
+    & Raw &       52.7 &    17.3 &       17.0 &      63.1 &   $63.0\pm0.0$ \\
+    & Last &       28.3 &    28.2 &       27.7 &      94.4 &   $94.5\pm0.0$ \\
+\bottomrule
+\end{tabular}
+\vspace{1cm}\\
+\textbf{House C}\\
+\vspace{1cm}\\
+\begin{tabular}{llrrrrl}
+\toprule
+    &        &  Precision &  Recall &  F-Measure &  Accuracy &    CV\_Accuracy \\
+Model & Feature &            &         &            &           &                \\
+\midrule
+HMM & Change &       24.3 &    18.3 &       18.5 &      79.1 &   $74.9\pm2.6$ \\
+    & Raw &        3.0 &     5.9 &        3.9 &      48.9 &   $45.3\pm4.6$ \\
+    & Last &       27.3 &    28.3 &       26.1 &      78.3 &   $81.8\pm4.7$ \\
+SVM & Change &       19.3 &     6.4 &        5.0 &      46.6 &  $46.6\pm11.3$ \\
+    & Raw &        9.2 &     7.2 &        7.2 &      44.5 &  $44.5\pm14.9$ \\
+    & Last &       25.5 &    27.9 &       25.7 &      80.9 &   $80.9\pm5.1$ \\
+SSVM & Change &       12.6 &     6.8 &        5.6 &      50.5 &   $50.5\pm0.7$ \\
+    & Raw &       20.8 &    13.3 &       14.0 &      55.8 &   $55.8\pm2.3$ \\
+    & Last &       24.7 &    22.3 &       20.8 &      78.5 &   $78.5\pm0.4$ \\
+CRF & Change &        8.1 &     6.1 &        4.5 &      48.0 &   $48.0\pm0.2$ \\
+    & Raw &       11.5 &    10.6 &       10.4 &      53.5 &   $53.5\pm0.1$ \\
+    & Last &       12.8 &    15.3 &       13.3 &      78.2 &   $78.2\pm0.0$ \\
+NB & Change &       25.5 &     6.5 &        5.2 &      46.7 &   $46.5\pm0.0$ \\
+    & Raw &       28.3 &    17.0 &       16.1 &      53.3 &   $53.3\pm0.1$ \\
+    & Last &       32.4 &    28.1 &       26.5 &      81.5 &   $81.5\pm0.1$ \\
+\bottomrule
+\end{tabular}
+\vspace{1cm}\\
+\textbf{House B}\\
+\vspace{1cm}\\
+\begin{tabular}{llrrrrl}
+\toprule
+    &        &  Precision &  Recall &  F-Measure &  Accuracy &    CV\_Accuracy \\
+Model & Feature &            &         &            &           &                \\
+\midrule
+HMM & Change &       15.9 &    17.9 &       16.8 &      80.7 &   $89.5\pm1.9$ \\
+    & Raw &        8.9 &     4.9 &        4.5 &      62.3 &   $61.9\pm8.2$ \\
+    & Last &       13.0 &    15.9 &       13.3 &      81.3 &   $89.0\pm4.4$ \\
+SVM & Change &       16.5 &     4.9 &        4.7 &      59.8 &  $59.8\pm17.0$ \\
+    & Raw &       10.9 &     9.7 &        8.3 &      58.4 &  $58.4\pm28.9$ \\
+    & Last &       17.3 &    15.1 &       15.0 &      81.9 &   $81.9\pm9.2$ \\
+SSVM & Change &       15.3 &     5.0 &        4.8 &      60.4 &   $60.4\pm0.1$ \\
+    & Raw &       33.5 &    17.4 &       20.9 &      91.2 &   $91.2\pm0.2$ \\
+    & Last &       26.5 &    20.6 &       18.9 &      85.5 &   $85.5\pm0.9$ \\
+CRF & Change &        2.3 &     3.8 &        2.9 &      59.3 &   $59.3\pm0.0$ \\
+    & Raw &        7.5 &     7.9 &        7.7 &      86.8 &   $86.8\pm2.3$ \\
+    & Last &        7.5 &     7.7 &        7.5 &      84.4 &   $84.4\pm0.0$ \\
+NB & Change &       23.9 &     5.2 &        5.2 &      60.1 &   $60.0\pm0.0$ \\
+    & Raw &       42.8 &    33.6 &       28.8 &      88.5 &   $88.5\pm0.0$ \\
+    & Last &       29.9 &    18.5 &       18.5 &      87.8 &   $87.8\pm0.1$ \\
+\bottomrule
+\end{tabular}
+\vspace{1cm}\\
+\end{document}

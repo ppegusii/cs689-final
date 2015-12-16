@@ -22,6 +22,7 @@ def main():
         'B': [],
         'C': [],
     }
+    confusions = ''
     pattern = r'([a-z]+)_([ABC])((?:change)|(?:last)|(?:data))(\.|\d|_)'
     for r, dns, fns in os.walk(args.metricDir):
         for fn in sorted(fns):
@@ -48,17 +49,36 @@ def main():
                 row['Recall'] = m['recall_score']*100
                 row['F-Measure'] = m['f1_score']*100
                 row['Accuracy'] = m['accuracy_score']*100
-                # row['CV_Accuracy'] = u'{:.1f}\u00B1{:.1f}'.format(
                 row['CV_Accuracy'] = '${:.1f}\pm{:.1f}$'.format(
                     m['cv_acc_mean']*100, m['cv_acc_std']*100)
-                # row['CV_Accuracy'] = '{:.1f}'.format(
-                #     m['cv_acc_mean']*100)
+                try:
+                    cm = pd.DataFrame(m['confusion_matrix'])
+                    cm.index = m['activity_names']
+                    cm.columns = ['\\rot{{{}}}'.format(n) for n in
+                                  m['activity_names']]
+                    # print(cm)
+                    confusions += (
+                        '\\textbf{{House {} Model {} Feature {}}}\\\\\n'.format(
+                            house, match.group(1).upper(), rep[match.group(3)]))
+                    confusions += '\\vspace{1cm}\\\\\n'
+                    confusions += '\\begin{sideways}\n'
+                    confusions += '\\tiny\n'
+                    confusions += cm.to_latex(escape=False,
+                        float_format=lambda x: '{:.1f}'.format(x*100))
+                    confusions += '\\end{sideways}\n'
+                    confusions += '\\normalsize\n'
+                    confusions += '\\vspace{1cm}\\\\\n'
+                except ValueError as e:
+                    print('ValueError on {}: {}'.format(os.path.join(r, fn), e))
                 data[house].append(row)
             else:
                 print('Invalid file name: {}'.format(os.path.join(r, fn)))
     with open(args.latexFile, 'w') as f:
         f.write('\documentclass{article}\n')
         f.write('\usepackage{booktabs}\n')
+        f.write('\usepackage{graphicx}\n')
+        f.write('\usepackage{rotating}\n')
+        f.write('\\newcommand*{\\rot}{\\rotatebox{90}}\n')
         f.write('\\begin{document}\n')
         for house, rowList in data.items():
             f.write('\\textbf{{House {}}}\\\\\n'.format(house))
@@ -70,10 +90,12 @@ def main():
             tex = df.to_latex(float_format=lambda x: '{:.1f}'.format(x))
             tex = tex.replace('textbackslash', '')
             tex = tex.replace('\$', '$')
+            tex = tex.replace('{llrrrrl}', '{llrrrrr}')
             f.write('{}'.format(tex))
             f.write('\\vspace{1cm}\\\\\n')
             # df.to_latex(f, formatters={'CV_Accuracy': lambda x: x})
             # df.to_latex(f, formatters={'CV_Accuracy': lambda x: u'{}'.format(x)})
+        f.write(confusions)
         f.write('\end{document}')
 
 

@@ -22,6 +22,8 @@ Home activities recognizing allows many potencial smart applications including h
 
 \section{Introduction}
 
+Automatically recognizing human activities such as cooking, sleeping and bathing, in a home setting allows many applications in areas such as intelligent environments and healthcare. Recent developments in sensing technology has led to wireless sensor networks which provide a non-intrusive, privacy friendly and easy to install solution to in-home monitoring. Sensors used are contact switches to measure open-close states of doors and cupboards; pressure mats to measure sitting on a couch or lying in bed; mercury contacts for movement of objects such as drawers; passive infrared sensors to detect motion in a specific area and float sensors to measure the toilet being flushed.
+
 Activity recognition is the problem of determining an individual's or group's activities given some sensor data describing their actions. More formally, activity recognition finds a function that maps a sequence of sensor readings (feature vectors), to a sequence of activity labels that best describes the sensor data. We focus on activity recognition within home based wireless sensor networks. 
 
 In this case, sensors may include contact, motion, temperature, and humidity sensors located on doors, appliances or monitoring certain rooms. This problem has many applications including healthcare and energy efficiency, where other sensors, such as cameras and wearables, intrude upon privacy or are too expensive or inconvenient. In healthcare, home activity recognition can be used to assess the cognitive and physical capabilities of an elderly person. 
@@ -33,44 +35,10 @@ To further our knowledge of machine learning, we will conduct a comprehensive em
 For our group project, we tackle the problem of activity recognition using available sensor information installed in homes. These sensors could be infrared motion detector sensors (to understand when a person entered a room or opened a fridge), to RFID sensors, to microphone based labeling of activities to record the ground truth. These datasets are usually available in the form of timestamp and the corresponding activity or sensor label. So, in this project we would like to predict a label (i.e. the activity) given a sequence of observations. 
 
 \section{Related Works}
-Other works show part of the models in their work. It is hard to compare across different works. Instead, we presented a set of models. The evaluation results could be used as the baseline for future research.
 
+The probabilistic models discussed in our project represent the state of the art models used in activity recognition. Tapia et al. used the naive Bayes model in combination with the raw feature representation on two real world datasets recorded using a wireless sensor network~\cite{emtapia}. HMMs were used in work by Patterson et al. and were applied to data obtained from a wearable RFID reader in a house where many objects are equipped with RFID tags~\cite{djpatt}. In work by van Kasteren et al. the performance of HMMs and CRFs in activity recognition was compared on a realworld dataset recorded using a wireless sensor network~\cite{tvkasteren}. Duong et al. compared the performance of HSMMs and HMMs in activity recognition using a laboratory setup in which four cameras captured the location of a person in a kitchen setup~\cite{tduong}. One type of model that we have not included in our comparison are hierarchical models. They have been successfully applied to activity recognition from video data~\cite{sluhr}, in an office environment using cameras, microphones and keyboard input~\cite{noliver} and on data obtained from a wearable sensing system ~\cite{asubr}.
+The related works show part of the models in their work, respectively. It is hard to compare across different works. Instead, we implemented a set of models and ran the experiments on the same real word dataset. The evaluation results could be used as the baseline for future research.
 
-
-The probabilistic models discussed in this chapter represent the state of the art models used in activity recognition. Tapia et al. used the naive Bayes model in combination with the raw feature representation on two real world datasets recorded using a wireless sensor network [16]. HMMs were used in work by Patterson et al. and were applied to data obtained from a wearable RFID reader in a house where many objects are equipped with RFID tags [17]. Wireless sensor network data is more ambiguous than RFID data with respect to activities. For example, when using RFID it is possible to sense which object is used, while with wireless sensor networks only the cupboard that contains the object can be sensed. Because there are usually multiple objects in a cupboard the resulting data is ambiguous with respect to the object used. In work by van Kasteren et al. the performance of HMMs and CRFs in activity recognition was compared on a realworld dataset recorded using a wireless sensor network [18]. Duong et al. compared the performance of HSMMs and HMMs in activity recognition using a laboratory setup in which four cameras captured the location of a person in a kitchen setup [19]. One type of model that we have not included in our comparison are hierarchical models. They have been successfully applied to activity recognition from video data [20], in an office environment using cameras, microphones and keyboard input [21] and on data obtained from a wearable sensing system [22].
-
-\begin{enumerate}
- 
-\item Interesting because it has applications that spans across various domains:
-	\begin{enumerate}
-	\item Healthcare\\
-		- Long term monitoring of activities could provide us interesting insights on degenerative heath \\
-		- Especially useful in monitoring health of elderly people\\
-	\item  Energy savings \\
-		- Understanding the pattern of activities could help us save energy. \\
-		- For example, switching off AC/heater when no one is at home \\
-	\item  From a Security perspective\\
-		- Again, notifications can be sent to alert the home owners if there is an aberrant activity in the door entrance. \\
-	\item  Intelligent Homes\\
-		- 
-	\end{enumerate}
-\item Challenging
-		\begin{enumerate}
-	\item Sensor datasets could be noisy\\
-		- the front doors may open and close multiple times; this doesn't may not indicate that the person has left the home.\\
-		- sometimes the sensors itself may have false positives. \\
-		
-	\item multiple labels may be mapped to a single sensor activity\\
-		- opening of a fridge may mean both; make coffee and make cooking\\
-		- some other information such as how long the person spent in the kitchen may provide some useful insight\\
-		
-	\item Imbalanced class problem\\
-		- machine learning algorithms and works best when the number of instances of each classes are roughly equal\\
-		- where the total number of a class of data (positive) is far less than the total number of another class of data (negative)	\\
-		- In this problem, no activity is a perfectly reasonable label. So the prediction model may always output 'no activity' and be accurate 80\% of the time.\\
-		\end{enumerate}
-
-\end{enumerate}
 
 \section{Research Problem}
 
@@ -78,10 +46,9 @@ We use more models, compared with other related works.
 
 \section{Recognizing Methods}
 We would like to explore the following techniques:
-	\begin{enumerate}
+\begin{enumerate}
 \item HMM - 
 Hidden Markov Modes (HMM) are a ubiquitous tool for modeling time series data and a generative probabilistic model consisting of a hidden variable and an observable variable at each time step. HMM can be used as black-box density models on sequences. They have the advantage over Markov models in that they can represent long-range dependencies between observations, mediated via the latent variables. 
-
 In our project the hidden variable is the activity performed, and the observable variable is the vector of sensor readings. There are two dependency assumptions: The hidden variable at time t, namely $y_{t}$, depends only on the previous hidden variable $y_{t-1}$. The observable variable at time t, namely $x_{t}$, depends only on the hidden variable $y_{t}$ at that time slice. Then, we can specify an HMM using three probability distributions: the distribution over initial states p($y_{1}$); the transition distribution $p(y_{t}\mid y_{t-1})$ representing the probability of going from one state to the next; and the observation distribution $p(x_{t}\mid y_{t})$ indicating the probability that the state yt would generate observation $x_{t}$.
 Learning the parameters of these distributions corresponds to maximizing the joint probability p(x, y) of the paired observation and label sequences in the training data. We can factorize the joint distribution in terms of the three distributions described above as follows:
 
@@ -89,27 +56,48 @@ Learning the parameters of these distributions corresponds to maximizing the joi
 P(x,y)=\prod_{t=1}^{T}p(y_{t}\mid y_{t-1})p(x_{t}\mid y_{t}), p(y_{1}) = p(y_{1}\mid y_{0})
 \end{equation}
 
-The parameters that maximize this joint probability are found by frequency counting. Because in our case we are dealing with discrete data, we can simply count the number of occurrences of transitions, observations and states [15]
+The parameters that maximize this joint probability are found by frequency counting. Because in our case we are dealing with discrete data, we can simply count the number of occurrences of transitions, observations and states~\cite{emtapia}.
 
 \item CRF - 
-A Conditional Random Field (CRF) is a discriminative probabilistic model that can come in many different forms. The form that most closely resembles the HMM is known as a linear-chain CRF and is the model we use in this project.
+A CRF using the first-order Markov assumption is called a linear-chain CRF and most closely resembles the HMM in terms of structure. We define the linear-chain CRF as a discriminative analog of the previously defined HMM, so that the conditional distribution is defined as
+\begin{equation}
+p(y\mid x)=\frac{1}{Z(x)}exp\left[{\sum_{k=1}^{K}}{\lambda}_{k}{f}_{k}({y}_{t},{y}_{t-1},{x}_{t})\right]
+\end{equation}
+where \textit{K} is the number of feature functions used to parameterize the distribution,${\lambda}_{k}$ is the weight parameter and ${f}_{k}({y}_{t},{y}_{t-1},{x}_{t})$ is the feather function. The product of the parameters and the feature function${\lambda}_{k}{f}_{k}({y}_{t},{y}_{t-1},{x}_{t})$ is called energy function, while the exponential representation is the potential function. The partiton function \textit{Z(x)} is normalization term in order to make the distribution sums up to one and obtains a probabilistic interpretation.
 
+\begin{equation}
+Z(x)=\sum_{y}^{}exp\left[{\sum_{k=1}^{K}}{\lambda}_{k}{f}_{k}({y}_{t},{y}_{t-1},{x}_{t})\right]
+\end{equation}
 
 \item SVM - 
 The implementation used in this experiment comes from SVM
 
 \item SSVM - 
 
-\item Naive Bayes
-	\end{enumerate}
-The idea of the naive Bayes classifier is to use a generative model of text to estimate
+\item Naive Bayes.
+The naive Bayes model is one of the most simplistic probabilistic models. Unlike the other models, the naive Bayes model assumes all data points are independently and identically distributed (i.i.d.), that is it does not take into account any temporal relations between datapoints. The model factorizes the joint probability over the datapoints as follows,
+\begin{equation}
+p({y}_{1:T},{x}_{1:T})=\prod_{t=1}^{T}p({{x}_{t}\mid {y}_{t}}^{})p({y}_{t})
+\end{equation}
+we apply the naive Bayes assumption, which means we model each sensor reading separately, requiring only
+\textit{N} parameters for each activity. The observation distribution therefore factorizes as
+\begin{equation}
+p({x}_{t}\mid{y}_{t}=i)=\prod_{n=1}^{N}p({{x}_{t}^{n}\mid {y}_{t}}=i)
+\end{equation}
+where each sensor observation is modeled as an independent Bernoulli distribution, given by
+\begin{equation}
+p({{x}_{t}^{n}\mid {y}_{t}}=i)={{\mu}_{ni}}^{{{x}_{t}}^n}{(1-{\mu}_{ni})}^{1-{{x}_{t}}^n}
+\end{equation}
 
+\end{enumerate}
 
+\iffalse
 The datasets available to us are:
 	\begin{enumerate}
 \item Kasteren dataset - has over a month long sensor information from 3 homes.
 \item Tulum dataset - more than six month period from a single home
 	\end{enumerate}
+\fi
 
 
 \section{Experimental Evaluation}
@@ -212,3 +200,37 @@ MCC=\frac{TP\cdot TN-FP\cdot FN}{\sqrt{(TP+FP)\cdot (TP+FN)\cdot (TN+FP)\cdot (T
 \end{thebibliography}
 
 \end{document}  
+
+
+\begin{enumerate}
+ 
+\item Interesting because it has applications that spans across various domains:
+	\begin{enumerate}
+	\item Healthcare\\
+		- Long term monitoring of activities could provide us interesting insights on degenerative heath \\
+		- Especially useful in monitoring health of elderly people\\
+	\item  Energy savings \\
+		- Understanding the pattern of activities could help us save energy. \\
+		- For example, switching off AC/heater when no one is at home \\
+	\item  From a Security perspective\\
+		- Again, notifications can be sent to alert the home owners if there is an aberrant activity in the door entrance. \\
+	\item  Intelligent Homes\\
+		- 
+	\end{enumerate}
+\item Challenging
+		\begin{enumerate}
+	\item Sensor datasets could be noisy\\
+		- the front doors may open and close multiple times; this doesn't may not indicate that the person has left the home.\\
+		- sometimes the sensors itself may have false positives. \\
+		
+	\item multiple labels may be mapped to a single sensor activity\\
+		- opening of a fridge may mean both; make coffee and make cooking\\
+		- some other information such as how long the person spent in the kitchen may provide some useful insight\\
+		
+	\item Imbalanced class problem\\
+		- machine learning algorithms and works best when the number of instances of each classes are roughly equal\\
+		- where the total number of a class of data (positive) is far less than the total number of another class of data (negative)	\\
+		- In this problem, no activity is a perfectly reasonable label. So the prediction model may always output 'no activity' and be accurate 80\% of the time.\\
+		\end{enumerate}
+
+\end{enumerate}

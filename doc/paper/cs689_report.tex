@@ -77,7 +77,7 @@ In our project the hidden variable is the activity performed, and the observable
 Learning the parameters of these distributions corresponds to maximizing the joint probability p(x, y) of the paired observation and label sequences in the training data. We can factorize the joint distribution in terms of the three distributions described above as follows:
 
 \begin{equation}
-P(x,y)=\coprod_{t=1}^{T}p(y_{t}\mid y_{t-1})p(x_{t}\mid y_{t}), p(y_{1}) = p(y_{1}\mid y_{0})
+P(x,y)=\prod_{t=1}^{T}p(y_{t}\mid y_{t-1})p(x_{t}\mid y_{t}), p(y_{1}) = p(y_{1}\mid y_{0})
 \end{equation}
 
 The parameters that maximize this joint probability are found by frequency counting. Because in our case we are dealing with discrete data, we can simply count the number of occurrences of transitions, observations and states [15]

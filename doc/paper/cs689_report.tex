@@ -18,33 +18,19 @@
 %\section{}
 %\subsection{}
 \section{Abstract:}
-Home activities recognizing allows many smart applications including healthcare and energy efficiency. 
+Home activities recognizing allows many smart applications including healthcare and energy efficiency. In this project, we present the state of the art models for recognizing activities, and show their performace on the Kasteren-a real world dataset. Comparative analysis metrics including precision, recall, accuracy, F1 mesure and MCC are used in the experiments. Our evalution results could be used for ohte pattern reconition area rather than home activity recoginizing.
 
 \section{Introduction}
-Activity recognition is the problem of determining an individual's or group's activities given some sensor data describing their actions.
-	More formally, activity recognition finds a function that maps a sequence of sensor readings (feature vectors), to a sequence of activity labels that best describes the sensor data.
-	We focus on activity recognition within home based wireless sensor networks.
-	In this case, sensors may include contact, motion, temperature, and humidity sensors located on doors, appliances or monitoring certain rooms.
-	This problem has many applications including healthcare and energy efficiency, where other sensors, such as cameras and wearables, intrude upon privacy or are too expensive or inconvenient.
-	In healthcare, home activity recognition can be used to assess the cognitive and physical capabilities of an elderly person.
-	Home energy efficiency can be improved given a schedule of the occupant's activities by scheduling background loads, such as heating, cooling, and various appliances.
 
-	This domain has several challenges.
-	First, there is a dearth of training data because labeling one's activities is a tedious time consuming process, this limits the number of effective techniques.
-	Second, patterns in training data are specific to the home and the individual.
-	Therefore, the performance of a machine learning technique may vary widely over different data sets.
-	Finally, dominant classes may confound machine learning techniques.
+Activity recognition is the problem of determining an individual's or group's activities given some sensor data describing their actions. More formally, activity recognition finds a function that maps a sequence of sensor readings (feature vectors), to a sequence of activity labels that best describes the sensor data. We focus on activity recognition within home based wireless sensor networks. 
 
-	To further our knowledge of machine learning, we will conduct a comprehensive empirical analysis of proposed methods in this domain, across a collection of datasets.
-	These methods include Hidden Markov Models, Conditional Random Fields, and Support Vector Machines.
-	We will apply these methods to at least four datasets that vary in duration, home size, and sensor counts, which are not necessarily proportional to home size.
-	By applying these techniques to real-world datasets and explaining the differences and similarities in their performances, we will gain a deeper understanding of machine learning.
+In this case, sensors may include contact, motion, temperature, and humidity sensors located on doors, appliances or monitoring certain rooms. This problem has many applications including healthcare and energy efficiency, where other sensors, such as cameras and wearables, intrude upon privacy or are too expensive or inconvenient. In healthcare, home activity recognition can be used to assess the cognitive and physical capabilities of an elderly person. 
 
-For our group project, we tackle the problem of activity recognition using available sensor information installed in homes. 
-These sensors could be infrared motion detector sensors (to understand when a person entered a room or opened a fridge),
-to RFID sensors, to microphone based labeling of activities to record the ground truth. These datasets 
-are usually available in the form of timestamp and the corresponding activity or sensor label. 
-So, in this project we would like to predict a label (i.e. the activity) given a sequence of observations. 
+Home energy efficiency can be improved given a schedule of the occupant's activities by scheduling background loads, such as heating, cooling, and various appliances. This domain has several challenges. First, there is a dearth of training data because labeling one's activities is a tedious time consuming process, this limits the number of effective techniques. Second, patterns in training data are specific to the home and the individual. Therefore, the performance of a machine learning technique may vary widely over different data sets. Finally, dominant classes may confound machine learning techniques.
+
+To further our knowledge of machine learning, we will conduct a comprehensive empirical analysis of proposed methods in this domain, across a collection of datasets. These methods include Hidden Markov Models, Conditional Random Fields, and Support Vector Machines. We will apply these methods to at least four datasets that vary in duration, home size, and sensor counts, which are not necessarily proportional to home size. By applying these techniques to real-world datasets and explaining the differences and similarities in their performances, we will gain a deeper understanding of machine learning.
+
+For our group project, we tackle the problem of activity recognition using available sensor information installed in homes. These sensors could be infrared motion detector sensors (to understand when a person entered a room or opened a fridge), to RFID sensors, to microphone based labeling of activities to record the ground truth. These datasets are usually available in the form of timestamp and the corresponding activity or sensor label. So, in this project we would like to predict a label (i.e. the activity) given a sequence of observations. 
 
 \begin{enumerate}
  
@@ -78,6 +64,8 @@ So, in this project we would like to predict a label (i.e. the activity) given a
 		\end{enumerate}
 
 \end{enumerate}
+
+\section{Research Problem}
 
 \section{Recognizing Methods}
 We would like to explore the following techniques:

@@ -1,0 +1,15 @@
+INTRODUCTION
+------------
+
+REQUIREMENTS
+------------
+
+1. Install CRFsuite and python-crfsuite to run the crf models. Installation instructions can be found here. https://github.com/tpeng/python-crfsuite
+2. Install pystruct and optimization libraries. Installation instructions can be found here. https://pystruct.github.io/
+
+You will also need to install the following libraries:
+1. pandas
+2. scikit-learn 
+3. numpy
+
+	

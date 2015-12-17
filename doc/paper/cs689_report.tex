@@ -37,9 +37,12 @@ The probabilistic models discussed in our project represent the state of the art
 The related works show part of the models in their work, respectively. It is hard to compare across different works. Instead, we implemented a set of models and ran the experiments on the same real word dataset. The evaluation results could be used as the baseline for future research. 
 
 
-\section{Research Problem}
+\section{Problem definition}
 
 We use more models, compared with other related works.
+
+Infer occupant activities using sensors home deployed sensors
+
 
 \section{Recognizing Methods}
 We would like to explore the following techniques:
@@ -105,6 +108,20 @@ The Kasteren dataset is recording a 26-year-old man. He lives alone in a three-r
 
 
 \subsection{Experimental Setup}
+
+Feature representations
+
+Raw: the raw sensor representation uses the sensor data directly as it was received from the sensors. It gives a 1 when the sensor is firing and a 0 otherwise 
+
+
+Change: The change point representation indicates when a sensor event takes place. That is, it indicates when a sensor changes value. More formally, it gives a 1 when a sensor changes state (i.e. goes from zero to one or vice versa) and a 0 otherwise.
+
+Last: The last-fired sensor representation indicates which sensor fired last. The sen- sor that changed state last continues to give 1 and changes to 0 when another sensor changes state 
+
+5 fold – cross validation
+
+Divide the dataset into smaller subsequences of ~2 hours 
+
 
 \subsection{Feather Representation}
 

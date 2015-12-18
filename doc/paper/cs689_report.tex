@@ -10,7 +10,8 @@
 \usepackage{amsmath}
 
 \title{HomeActivity: Recognizing home activities using sensor data}
-\author{Stephen Lee, Patrick Pagus and Dong Chen}
+\author{Stephen Lee, Patrick Pagus and Dong Chen\\ 
+ML Final Project}
 %\date{}							% Activate to display a given date or no date
 
 \begin{document}
@@ -18,15 +19,36 @@
 %\section{}
 %\subsection{}
 \section{Abstract:}
-\textit{
-Home activities recognizing allows many potencial smart applications including healthcare and energy efficiency. In this project, we present the state of the art models for recognizing activities, and show how they performance on the Kasteren-a real world dataset. Comparative analysis metrics including precision, recall, accuracy, F1 mesure and MCC are used in the experiments. Our evaluation results could be used for other pattern recognizing area rather than home activity recognizing.}
+
+In this project, we user sensors deployed in homes to identify activities. The actuation of sensors provides a unique set of feature representation that allows us to identity 
+the type of activity being undertaken by the user. The goal of our project is to use these sensor information to infer activities under different methodologies and analyze their 
+performance.  We use datasets from three different houses that are annotated manually to get the 'ground truth'.  To capture the underlying model, we use different feature representations from the sensors. We present our results and discuss our findings. 
+ 
+
+%Recognizing home activities allows many potential smart applications including healthcare and energy efficiency. In this project, we present the state of the art models for recognizing activities, and show how they performance on the Kasteren-a real world dataset. 
+%Comparative analysis metrics including precision, recall, accuracy, F1 mesure and MCC are used in the experiments. Our evaluation results could be used for other pattern recognizing area rather than home activity recognizing.
 
 \section{Introduction}
+According to a recent study,  it is estimated that almost 25+ billion Internet of Things (IoT) devices will be deployed across homes. Moreover, around 50 trillion GBs of 
+data will be collected using these sensors. The information collected can be used to enrich the interaction between users and the physical devices. For example, NEST thermostat, 
+an intelligent programmable thermostat, learns the occupancy of humans in a home using sensors to automatically turn on/off heating or air conditioning and save energy costs. These sensor information can be used to learn other information such as monitoring the activities of a person (e.g. elderly home) and being able to detect anomalies in behavior over time. In this project, we focus on recognizing the activities of a person using the sensor information available. i.e. We study different techniques to identify when the person is sleeping, eating etc. 
 
-Automatically recognizing human activities such as cooking, sleeping and bathing, in a home setting allows many applications in areas such as intelligent environments and healthcare. In healthcare, home activity recognition can be used to assess the cognitive and physical capabilities of an elderly person. Home energy efficiency can be improved given a schedule of the occupant's activities by scheduling background loads, such as heating, cooling, and various appliances. 
+Activity recognition has been a widely studied area and provides a set of challenges in itself. First, ambiguity exists if there are more than one activity happening concurrently at any given time, such as watching TV and eating a snack. Also, this muddles the distinction between the start and end of an activity. Second, activation of a sensor may represent doing a similar activity. For example, opening the fridge could represent 'getting a snack' activity or 'cooking' activity'. Third, the information could be noisy e.g. with misfiring sensors or a mistakes made by humans such as unintentionally opening a cupboard or entering a room. Fourth, recognizing activities has class imbalance as certain activity labels tend to be longer than others. For example, lying on bed or couch, staying idle, or 'not at home' could easily represent the dominant classes in these datasets. 
 
-Recent developments in sensing technology has led to wireless sensor networks which provide a non-intrusive, privacy friendly and easy to install solution to in-home monitoring. Sensors used are contact switches to measure open-close states of doors and cupboards; pressure mats to measure sitting on a couch or lying in bed; mercury contacts for movement of objects such as drawers; passive infrared sensors to detect motion in a specific area and float sensors to measure the toilet being flushed. 
-More formally, activity recognition finds a function that maps a sequence of sensor readings (feature vectors), to a sequence of activity labels that best describes the sensor data. We focus on activity recognition within home based wireless sensor networks. This domain has several challenges. First, there is a dearth of training data because labeling one's activities is a tedious time consuming process, this limits the number of effective techniques. Second, patterns in training data are specific to the home and the individual. Therefore, the performance of the different machine learning technique may vary widely over a real world dataset. Finally, dominant classes may confound machine learning techniques.
+Clearly, activity recognition is a challenging problem. Thus, we chose a dataset wherein the homes was occupied by a single user. We construct features using the binary sensors installed in these homes that we will describe later in section. In fact, we construct multiple feature representations to study the problem and follow closely the approaches studied by Kasteren~\cite{tvkasteren} among others. In the following section, we will be describing our approach, and discuss its performance and lessons learned from undertaking this project.
+
+
+%Automatically recognizing human activities such as cooking, sleeping and bathing, in a home setting allows many applications in areas such as intelligent environments and 
+%healthcare. In healthcare, home activity recognition can be used to assess the cognitive and physical capabilities of an elderly person. Home energy efficiency can be improved given 
+%a schedule of the occupant's activities by scheduling background loads, such as heating, cooling, and various appliances. 
+
+%Recent developments in sensing technology has led to wireless sensor networks which provide a non-intrusive, privacy friendly and easy to install solution to in-home monitoring. 
+%Sensors used are contact switches to measure open-close states of do	ors and cupboards; pressure mats to measure sitting on a couch or lying in bed; mercury contacts for 
+%movement of objects such as drawers; passive infrared sensors to detect motion in a specific area and float sensors to measure the toilet being flushed. 
+%More formally, activity recognition finds a function that maps a sequence of sensor readings (feature vectors), to a sequence of activity labels that best describes the sensor data. We 
+%focus on activity recognition within home based wireless sensor networks. This domain has several challenges. First, there is a dearth of training data because labeling one's activities 
+%is a tedious time consuming process, this limits the number of effective techniques. Second, patterns in training data are specific to the home and the individual. Therefore, the 
+%performance of the different machine learning technique may vary widely over a real world dataset. Finally, dominant classes may confound machine learning techniques.
 
 To further our knowledge of machine learning, we will conduct a comprehensive empirical analysis of proposed methods in this domain. These methods include Hidden Markov Models(HMM), Conditional Random Fields(CRF), Support Vector Machines(SVM), and Structured Support Vector Machines(SSVM) and Naive Bayes (NB). We implemented the models in Python and apply these methods to Kasteren-a real world dataset. By applying these techniques to real-world datasets and explaining the differences and similarities in their performances, we will gain a deeper understanding of machine learning. Furthermore, 
 Our evaluation results could be used as a baseline for other pattern recognizing area rather than home activity recognizing.

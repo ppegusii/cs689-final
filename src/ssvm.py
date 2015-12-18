@@ -17,7 +17,7 @@ data_loc_str = '../data/kasteren/2010/datasets/house{house}/{feature}.csv.gz'
 def main():
     #args = parseArgs(sys.argv)
     for house in [ 'C', 'B' , 'A']:
-        for f in ['last', 'change', 'data']:
+        for f in ['lastchange']:
             loc = data_loc_str.format(house=house,feature=f)
             data = load.data(loc)
             classify(data, house, f)
@@ -135,7 +135,7 @@ def classify(data, house, f):
         #print X_train1[0].shape,  y_train1[0].shape
 
         fname = 'ssvm_models/ssvm_' + house + f + str(i)+ '.pkl'
-        if not os.path.isfile(fname):
+        if os.path.isfile(fname):
             pkl_file = open(fname, 'rb')
             clf = pickle.load(pkl_file)
             print i, ". Classifier Loaded:", house, f, clf

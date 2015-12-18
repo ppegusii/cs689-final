@@ -35,7 +35,7 @@ def main():
     # args = parseArgs(sys.argv)
 
     for house in [  'A', 'B' , 'C']:
-        for f in ['data', 'last', 'change']:
+        for f in ['lastchange']:#, 'data', 'last', 'change']:
             loc = data_loc_str.format(house=house,feature=f)
             #load the data
             data = load.data(loc, dtype_str=True)
@@ -82,7 +82,7 @@ def main():
                 #y_test1 = np.array_split(y_test1, 10)
                 #strat
 
-                #train_CRF(X_train1, y_train1, house, f, i)
+                train_CRF(X_train1, y_train1, house, f, i)
 
                 accuracy, y_pred, y_true = test_CRF(X_test1, y_test1, house, f, i)
 

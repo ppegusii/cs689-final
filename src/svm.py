@@ -18,7 +18,7 @@ def main():
     #sample: {"y_pred":[], "y_true":[], "acc":[]}
     #args = parseArgs(sys.argv)
     for house in [ 'A', 'B' , 'C']:
-        for f in ['last', 'change', 'data']:
+        for f in ['lastchange']:#,'last', 'change', 'data']:
             loc = data_loc_str.format(house=house,feature=f)
             data = load.data(loc)
             classify(data, house, f)

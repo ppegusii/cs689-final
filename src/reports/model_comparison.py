@@ -29,7 +29,8 @@ def get_data(house, f):
     CRF = get_json('../crf_models/output/crf_{house}{f}_all.json.gz'.format(house=house, f=f))
     SSVM = get_json('../ssvm_models/output/ssvm_{house}{f}_all.json.gz'.format(house=house, f=f))
     NB = get_json('../../results/nb/nb_{house}{f}.json.gz'.format(house=house, f=f))
-    HMM = get_json('../../results/hmm/hmm_{house}{f}.json.gz'.format(house=house, f=f))
+    #HMM = get_json('../../results/hmm/hmm_{house}{f}.json.gz'.format(house=house, f=f))
+    HMM = get_json('../hmm_model_f/hmm_{house}{f}_all.json.gz'.format(house=house, f=f))
 
     return SVM, CRF, SSVM, NB, HMM
 
@@ -66,20 +67,22 @@ def draw_graph(house, svm_arr, crf_arr, ssvm_arr, nb_arr, hmm_arr):
     ind = np.arange(N)  # the x locations for the groups
     fig, ax = plt.subplots()
 
-    rects1 = ax.bar(ind-2*width, unpack(svm_arr, 0), width, color='0.0', yerr=unpack(svm_arr, 1),
-                    error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2)
-                    )
+    rects1 = ax.bar(ind-2*width, unpack(hmm_arr,0), width, color='1.0', yerr=unpack(hmm_arr,1),
+                    hatch=".",
+                    error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2))
+
     rects2 = ax.bar(ind-width, unpack(crf_arr,0), width, color='0.25', yerr=unpack(crf_arr,1),
                     hatch="/",
                     error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2))
-    rects3 = ax.bar(ind, unpack(ssvm_arr,0), width, color='0.5', yerr=unpack(ssvm_arr,1),
+
+    rects3 = ax.bar(ind, unpack(svm_arr, 0), width, color='0.0', yerr=unpack(svm_arr, 1),
+                    error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2)
+                    )
+    rects4 = ax.bar(ind + width, unpack(ssvm_arr,0), width, color='0.5', yerr=unpack(ssvm_arr,1),
                     hatch="\\",
                     error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2))
-    rects4 = ax.bar(ind+width, unpack(nb_arr,0), width, color='0.75', yerr=unpack(nb_arr,1),
+    rects5 = ax.bar(ind+2*width, unpack(nb_arr,0), width, color='0.75', yerr=unpack(nb_arr,1),
                     hatch="x",
-                    error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2))
-    rects5 = ax.bar(ind+2*width, unpack(hmm_arr,0), width, color='1.0', yerr=unpack(hmm_arr,1),
-                    hatch=".",
                     error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2))
 
     # add some text for labels, title and axes ticks
@@ -87,7 +90,7 @@ def draw_graph(house, svm_arr, crf_arr, ssvm_arr, nb_arr, hmm_arr):
     ax.set_xticks(ind + width)
     ax.set_xticklabels(('Raw', 'Change', 'Last'))
 
-    labels =  ('SVM', 'CRF', 'SSVM','Naive Bayes', 'HMM')
+    labels =  ('HMM','CRF', 'SVM', 'SSVM','Naive Bayes')
     rects = (rects1[0], rects2[0], rects3[0], rects4[0], rects5[0])
     ax.legend(rects, labels, loc=3,ncol=2, mode="expand",
               bbox_to_anchor=(0., 1.02, 1., .102), borderaxespad=0.)
@@ -103,7 +106,7 @@ def draw_graph(house, svm_arr, crf_arr, ssvm_arr, nb_arr, hmm_arr):
 
     plt.savefig(house + '.pdf', bbox_inches='tight')
 
-    plt.show()
+    #plt.show()
 
 def autolabel(ax, rects):
     # attach some text labels

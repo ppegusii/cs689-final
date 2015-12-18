@@ -44,7 +44,7 @@ def train_SSVM(X_train, y_train):
 
     model = ChainCRF()
     #ssvm = NSlackSSVM(model=model, C=.1, max_iter=11) # almost similar to FrankWolfeSSVM
-    ssvm = FrankWolfeSSVM(model=model, C=0.1, max_iter=11)
+    ssvm = FrankWolfeSSVM(model=model, C=0.001, max_iter=11)
     # c=0.2 -> 62.86 % accuracy <==> c=0.1
 
     #ssvm = OneSlackSSVM(model=model) #doesn't work as well
@@ -86,7 +86,7 @@ def relabel(data):
 def classify(data, house, f):
     data, old_labels = relabel(data)
     res_obj = {"y_pred":[], "y_true":[], "acc":[]}
-    data.iloc[::6]
+    #data.iloc[::6]
 
     # WWW
     # dividing the data into training and testing
@@ -135,7 +135,7 @@ def classify(data, house, f):
         #print X_train1[0].shape,  y_train1[0].shape
 
         fname = 'ssvm_models/ssvm_' + house + f + str(i)+ '.pkl'
-        if os.path.isfile(fname):
+        if not os.path.isfile(fname):
             pkl_file = open(fname, 'rb')
             clf = pickle.load(pkl_file)
             print i, ". Classifier Loaded:", house, f, clf

@@ -9,6 +9,29 @@ f_activity_labels = 'activity_labels.txt'
 output_dir = 'output'
 output_file = 'output{house}.csv'
 
+def combine_features(house, features):
+    fname = '../../data/kasteren/2010/datasets/house{house}/{feature}.csv.gz'
+
+    files = map(lambda f: fname.format(house=house, feeature=f), features)
+    data = load.data(loc)
+
+
+
+
+    max_d = min(sensors.index.max(), labels.index.max())
+    min_d = max(sensors.index.min(), labels.index.min())
+
+    df = pd.DataFrame()
+    df = df.append(sensors[min_d:max_d])
+    df['labels'] = labels[min_d:max_d]
+
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    df.to_csv(output_dir + '/' + output_file.format(house=house))
+
+    return df
+
 def save_to_csv(house, sensors, labels):
     max_d = min(sensors.index.max(), labels.index.max())
     min_d = max(sensors.index.min(), labels.index.min())

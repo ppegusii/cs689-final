@@ -41,8 +41,8 @@ def main():
             print('ValueError on {}: {}'.format(fn, e))
 
 
-def computeMetrics(results, names):
-    # Flatten listes if necesary
+def computeMetrics(results, names, allConfusion=False):
+    # Flatten lists if necessary
     if type(results['y_pred'][0]) == list:
         results['y_pred'] = [i for sub in results['y_pred'] for i in sub]
     if type(results['y_true'][0]) == list:
@@ -50,11 +50,17 @@ def computeMetrics(results, names):
     y_pred = np.array(results['y_pred'])
     y_true = np.array(results['y_true'])
     cv_acc = np.array(results['acc'])
-    numActNames = [(int(x[0]), x[1]) for x in names['activities'].items()]
+    if not allConfusion:
+        seen = set(np.unique(np.concatenate((y_true, y_pred))).tolist())
+        numActNames = [(int(x[0]), x[1]) for x in names['activities'].items()
+                       if int(x[0]) in seen]
+    else:
+        numActNames = [(int(x[0]), x[1]) for x in names['activities'].items()]
     nums, actNames = zip(*sorted(numActNames, key=lambda x: x[0]))
     return {
         'activity_names': actNames,
-        'confusion_matrix': confusion_matrix(y_true, y_pred, nums).tolist(),
+        'confusion_matrix': confusion_matrix(y_true, y_pred, nums,
+                                             allConfusion).tolist(),
         'cv_acc': cv_acc.tolist(),
         'cv_acc_mean': cv_acc.mean(),
         'cv_acc_std': cv_acc.std(),
@@ -66,15 +72,17 @@ def computeMetrics(results, names):
     }
 
 
-def confusion_matrix(y_true, y_pred, nums):
+def confusion_matrix(y_true, y_pred, nums, allConfusion):
     m = metrics.confusion_matrix(y_true, y_pred)
+    # normalize rows
     row_sums = m.sum(axis=1).astype(float)
     m = m / row_sums.reshape(-1, 1)
-    seen = set(np.unique(np.concatenate((y_true, y_pred))).tolist())
-    for i in xrange(len(nums)):
-        if nums[i] not in seen:
-            m = np.insert(m, i, 0, axis=0)
-            m = np.insert(m, i, 0, axis=1)
+    if allConfusion:
+        seen = set(np.unique(np.concatenate((y_true, y_pred))).tolist())
+        for i in xrange(len(nums)):
+            if nums[i] not in seen:
+                m = np.insert(m, i, 0, axis=0)
+                m = np.insert(m, i, 0, axis=1)
     return m
 
 

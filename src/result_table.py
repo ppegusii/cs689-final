@@ -48,10 +48,10 @@ def main():
                 row['Precision'] = m['precision_score']*100
                 row['Recall'] = m['recall_score']*100
                 row['F-Measure'] = m['f1_score']*100
-                # row['Accuracy'] = m['accuracy_score']*100
+                row['Accuracy'] = m['accuracy_score']*100
                 # row['CV_Accuracy'] = '${:.1f}\pm{:.1f}$'.format(
-                row['Accuracy'] = '${:.1f}\pm{:.1f}$'.format(
-                    m['cv_acc_mean']*100, m['cv_acc_std']*100)
+                # row['Accuracy'] = '${:.1f}\pm{:.1f}$'.format(
+                #     m['cv_acc_mean']*100, m['cv_acc_std']*100)
                 try:
                     cm = pd.DataFrame(m['confusion_matrix'])
                     cm.index = m['activity_names']

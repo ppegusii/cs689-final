@@ -42,7 +42,7 @@ def main():
         nb_arr = []
         hmm_arr = []
 
-        fname = house+'.json.gz'
+        fname = ''+ house+'.json.gz'
         if os.path.exists(fname):
             [svm_arr, crf_arr, ssvm_arr, nb_arr, hmm_arr] = get_json(fname)
         else:

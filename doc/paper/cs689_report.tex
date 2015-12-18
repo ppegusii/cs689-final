@@ -39,13 +39,23 @@ The related works show part of the models in their work, respectively. It is har
 
 \section{Problem definition}
 
-We use more models, compared with other related works.
+Inferring and recongizing occupant activities using sensors home deployed sensors requires us to solve the following issues. 
 
-Infer occupant activities using sensors home deployed sensors
+First, the start and end time of a performed activity is unknown. When activities are performed around the house there is no clear indication when one activity ends and another one starts. 
+
+Second, there is ambiguity in the observed sensor data with respect to which activity is taking place. For example, cooking and getting a drink both involve opening the fridge. Sensors can measure that the fridge is opened, but not which item is taken from the fridge. 
+
+Third, activities can be performed in a large number of ways, making it difficult to create a general description of an activity. 
+
+Fourth, observed sensor data is noisy. Noise can either be caused by a human making a mistake, for example opening a wrong cupboard, or by the sensor system which fails to transmit a sensor reading due to a network glitch.
+
+These issues make activity recognition a very challenging task. 
+
+Many different models have been proposed for activity recognition, but no common benchmark for evaluating the performance of these models exists. In this project we implenent the state of the art probabilistic models used in activity recognition and show their performance on several real world datasets. Our results can be used as a baseline for comparing the performance of other pattern recognition methods (both probabilistic and non-probabilistic). 
 
 
 \section{Recognizing Methods}
-We would like to explore the following techniques:
+We explore and implement the following techniques:
 \begin{enumerate}
 \item HMM - 
 Hidden Markov Modes (HMM) are a ubiquitous tool for modeling time series data and a generative probabilistic model consisting of a hidden variable and an observable variable at each time step. HMM can be used as black-box density models on sequences. They have the advantage over Markov models in that they can represent long-range dependencies between observations, mediated via the latent variables. 

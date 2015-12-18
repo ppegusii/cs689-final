@@ -106,6 +106,8 @@ The datasets available to us are:
 
 The Kasteren dataset is recording a 26-year-old man. He lives alone in a three-room apartment where 14 state-change sensors were installed. Locations of sensors include doors, cup- boards, refrigerator and a toilet flush sensor. Sensors were left unattended, collecting data for 28 days in the apartment. This resulted in 2120 sensor events and 245 activity instances.
 
+As shown in the table, for Kasteren dataset we have three houses with 14, 23, 21 sensors, respectively.
+
 The tableis an example of referenced \LaTeX elements.
  
 \begin{table*}[t!]
@@ -135,6 +137,11 @@ The tableis an example of referenced \LaTeX elements.
 
 Feature representations
 
+
+
+
+\subsection{Feather Representation}
+
 Raw: the raw sensor representation uses the sensor data directly as it was received from the sensors. It gives a 1 when the sensor is firing and a 0 otherwise 
 
 
@@ -145,15 +152,6 @@ Last: The last-fired sensor representation indicates which sensor fired last. Th
 5 fold – cross validation
 
 Divide the dataset into smaller subsequences of ~2 hours 
-
-
-\subsection{Feather Representation}
-
- Raw
-
-Changepoint
-
-Last-fired
 
 
 \subsection{Comparative Analysis Metrics}

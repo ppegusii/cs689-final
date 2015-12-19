@@ -52,12 +52,7 @@ Clearly, activity recognition is a challenging problem. Thus, we chose a dataset
 
 %To further our knowledge of machine learning, we will conduct a comprehensive empirical analysis of proposed methods in this domain. These methods include Hidden Markov Models(HMM), Conditional Random Fields(CRF), Support Vector Machines(SVM), and Structured Support Vector Machines(SSVM) and Naive Bayes (NB). We implemented the models in Python and apply these methods to Kasteren-a real world dataset. By applying these techniques to real-world datasets and explaining the differences and similarities in their performances, we will gain a deeper understanding of machine learning. Furthermore, 
 %Our evaluation results could be used as a baseline for other pattern recognizing area rather than home activity recognizing.
-
-\section{Related Works}
-
-The probabilistic models discussed in our project represent the state of the art models used in activity recognition. Tapia et al. used the naive Bayes model in combination with the raw feature representation on two real world datasets recorded using a wireless sensor network~\cite{emtapia}. HMMs were used in work by Patterson et al. and were applied to data obtained from a wearable RFID reader in a house where many objects are equipped with RFID tags~\cite{djpatt}. In work by van Kasteren et al. the performance of HMMs and CRFs in activity recognition was compared on a realworld dataset recorded using a wireless sensor network~\cite{tvkasteren}. Duong et al. compared the performance of HSMMs and HMMs in activity recognition using a laboratory setup in which four cameras captured the location of a person in a kitchen setup~\cite{tduong}. One type of model that we have not included in our comparison are hierarchical models. They have been successfully applied to activity recognition from video data~\cite{sluhr}, in an office environment using cameras, microphones and keyboard input~\cite{noliver} and on data obtained from a wearable sensing system ~\cite{asubr}.
-The related works show part of the models in their work, respectively. It is hard to compare across different works. Instead, we implemented a set of models and ran the experiments on the same real word dataset. The evaluation results could be used as the baseline for future research. 
-
+\input{relatedwork}
 
 \section{Approach}
 
@@ -129,40 +124,6 @@ The datasets available to us are:
 	\end{enumerate}
 \fi
 
-
-\section{Experimental Evaluation}
-
-\subsection{Datasets}
-
-The Kasteren dataset is recording a 26-year-old man. He lives alone in a three-room apartment where 14 state-change sensors were installed. Locations of sensors include doors, cup- boards, refrigerator and a toilet flush sensor. Sensors were left unattended, collecting data for 28 days in the apartment. This resulted in 2120 sensor events and 245 activity instances.
-
-As shown in the table, for Kasteren dataset we have three houses with 14, 23, 21 sensors, respectively.
-
-The tableis an example of referenced \LaTeX elements.
- 
-\begin{table*}[t!]
-\small
-\begin{center}
-\begin{tabular}{||c|c|c|c|||}
-\hline
-\textbf{Type} & \emph{House A} & \emph{House B} & \emph{House C}\\ \hline
-\textbf{Age} & 26 & 28 & 27\\ \hline
-\textbf{Gender} & M & M & M\\ \hline
-\textbf{Setting} & Apartment & Apartment & House\\ \hline
-\textbf{Room} & 3 & 2 & 6\\ \hline
-\textbf{Duration(days)} & 25 & 14 & 19\\ \hline
-\textbf{Sensors} & 14 & 23 & 21\\ \hline
-\textbf{Activities} & 10 & 13 & 16\\ \hline
-\textbf{Annotation} & Bluetooth & Diary & Bluetooh\\ \hline
-\end{tabular}
-\end{center}
-%\vspace{-0.1cm}
-\caption{Dataset recording details}
-\label{table:fake-attacks}
-\vspace{-0.3cm}
-\end{table*}
-
-
 \subsection{Experimental Setup}
 
 We use http://scikit-learn.org packages to present the models.
@@ -182,68 +143,14 @@ Last: The last-fired sensor representation indicates which sensor fired last. Th
 
 Divide the dataset into smaller subsequences of ~2 hours 
 
-
-\subsection{Comparative Analysis Metrics}
-
-\begin{equation}
-Precision = \frac{TP}{TP+FP}
-\end{equation}
-
-\begin{equation}
-Recall = \frac{TP}{TP+FN}
-\end{equation}
-
-\begin{equation}
-Accuracy = \frac{TP+TN}{TP+TN+FP+FN}
-\end{equation}
-
-\begin{equation}
-F-Measure = \frac{2\cdot Precision\cdot Recall}{Precison+Recall}
-\end{equation}
-
-The Matthews correlation coefficient is used in machine learning as a measure of the quality of binary (two-class) classifications, introduced by biochemist Brian W. Matthews in 1975. It takes into account true and false positives and negatives and is generally regarded as a balanced measure which can be used even if the classes are of very different sizes. The MCC is in essence a correlation coefficient between the observed and predicted binary classifications; it returns a value between −1 and +1. A coefficient of +1 represents a perfect prediction, 0 no better than random prediction and −1 indicates total disagreement between prediction and observation.
-
-\begin{equation}
-MCC=\frac{TP\cdot TN-FP\cdot FN}{\sqrt{(TP+FP)\cdot (TP+FN)\cdot (TN+FP)\cdot (TN+FN)}}
-\end{equation}
+\input{evaluation}
 
 
-\subsection{Experiments}
-%\pdfsuppresswarningpagegroup=1
-\begin{figure}[t!]
-\begin{center}
-\includegraphics[width=5in]{../../src/reports/A.pdf}
-\end{center}
-\vspace{-0.5cm}
-\caption{House A}
-\label{fig:house_a}
-\vspace{-0.5cm}
-\end{figure}
 
-\begin{figure}[t!]
-\begin{center}
-\includegraphics[width=5in]{../../src/reports/B.pdf}
-\end{center}
-\vspace{-0.5cm}
-\caption{House B}
-\label{fig:house_b}
-\vspace{-0.5cm}
-\end{figure}
-
-\begin{figure}[t!]
-\begin{center}
-\includegraphics[width=5in]{../../src/reports/C.pdf}
-\end{center}
-\vspace{-0.5cm}
-\caption{House C}
-\label{fig:house_3}
-\vspace{-0.5cm}
-\end{figure}
-
-\section{Discussion and Future Work}
+\section{Conclusions and Lessons Learned}
 
 
-\section{Reference}
+%\section{Reference}
 
 \begin{thebibliography}{1}
 	

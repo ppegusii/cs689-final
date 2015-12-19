@@ -71,6 +71,20 @@ We explore and implement the following techniques to recognize activities:
 %
 %Many different models have been proposed for activity recognition, but no common benchmark for evaluating the performance of these models exists. In this project we implenent the state of the art probabilistic models used in activity recognition and show their performance on several real world datasets. Our results can be used as a baseline for comparing the performance of other pattern recognition methods (both probabilistic and non-probabilistic). 
 
+\subsection{Naive Bayes}
+Naive Bayes model is a simple probabilistic model that assumes independence between every pair of features. The factorization of the joint probability over the datapoints as follows,
+\begin{equation}
+p({y}_{1:T},{x}_{1:T})=\prod_{t=1}^{T}p({{x}_{t}\mid {y}_{t}}^{})p({y}_{t})
+\end{equation}
+we apply the naive Bayes assumption, which means we model each sensor reading separately, requiring only
+\textit{N} parameters for each activity. The observation distribution therefore factorizes as
+\begin{equation}
+p({x}_{t}\mid{y}_{t}=i)=\prod_{n=1}^{N}p({{x}_{t}^{n}\mid {y}_{t}}=i)
+\end{equation}
+where each sensor observation is modeled as an independent Bernoulli distribution, given by
+\begin{equation}
+p({{x}_{t}^{n}\mid {y}_{t}}=i)={{\mu}_{ni}}^{{{x}_{t}}^n}{(1-{\mu}_{ni})}^{1-{{x}_{t}}^n}
+\end{equation}
 
 \subsection{Hidden Markov Models (HMM)}
 HMM is a generative probabilistic model that models the joint distribution of both the observed and the latent states. It is commonly used in recognizing temporal patterns such as handwriting and speech recognition, where the future state is dependent on the previous state.  In our project, the latent variable($\bf{y}$) is the activity performed by the user, and the observed variable($\bf{x}$) is the vector of sensor readings. 
@@ -125,22 +139,6 @@ where $x$ is the input, $Y$ is the set of all possible output and $g$ is the los
 g(x, y) = w^T f(x, y)
 \end{equation}
 Here, the $f$ is feature function, and we use the linear chain CRF model to represent the feature function i.e. the linear combination of the feature potential(nodes) and the transition potential (edges). The parameters of $g(x,y)$ is learnt by minimizing a loss. We use the libraries provided in \emph{pystruct} for classifying the input variables.
-
-\subsection{Naive Bayes}
-The naive Bayes model is one of the most simplistic probabilistic models. Unlike the other models, the naive Bayes model assumes all data points are independently and identically distributed (i.i.d.), that is it does not take into account any temporal relations between data points. The model factorizes the joint probability over the datapoints as follows,
-\begin{equation}
-p({y}_{1:T},{x}_{1:T})=\prod_{t=1}^{T}p({{x}_{t}\mid {y}_{t}}^{})p({y}_{t})
-\end{equation}
-we apply the naive Bayes assumption, which means we model each sensor reading separately, requiring only
-\textit{N} parameters for each activity. The observation distribution therefore factorizes as
-\begin{equation}
-p({x}_{t}\mid{y}_{t}=i)=\prod_{n=1}^{N}p({{x}_{t}^{n}\mid {y}_{t}}=i)
-\end{equation}
-where each sensor observation is modeled as an independent Bernoulli distribution, given by
-\begin{equation}
-p({{x}_{t}^{n}\mid {y}_{t}}=i)={{\mu}_{ni}}^{{{x}_{t}}^n}{(1-{\mu}_{ni})}^{1-{{x}_{t}}^n}
-\end{equation}
-
 
 \iffalse
 The datasets available to us are:

@@ -27,7 +27,7 @@ def get_accuracy_std(data):
 def get_data(house, f):
     SVM = get_json('../svm_models/output/svm_{house}{f}_all.json.gz'.format(house=house, f=f))
     CRF = get_json('../crf_models/output/crf_{house}{f}_all.json.gz'.format(house=house, f=f))
-    SSVM = get_json('../ssvm_models/output/ssvm_{house}{f}_all.json.gz'.format(house=house, f=f))
+    SSVM = get_json('../ssvm_models/output_params/ssvm_{house}{f}_all.json.gz'.format(house=house, f=f))
     NB = get_json('../../results/nb/nb_{house}{f}.json.gz'.format(house=house, f=f))
     HMM = get_json('../../results/hmm/hmm_{house}{f}.json.gz'.format(house=house, f=f))
 

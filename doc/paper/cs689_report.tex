@@ -114,8 +114,18 @@ the distance between the hyperplane and the nearest point is maximized.  In part
 where $x_i$ are the training examples, $y_i$ represent the labels, $w$ represents the weight vector and $\beta$ is the bias. In our approach, we use
 a Linear SVM for classification.
  
-\subsection{Structured SVM}
-Structure SVM
+\subsection{Structured Support Vector Machines (SSVM)}
+Structured SVM, as the name suggests, makes use of the structure of the output space for classification purposes. It is generally used for classification where the goal is to predict a sequence as compared to a single label in SVM. The loss function is represented by
+
+\begin{equation}
+y^* = \arg \max_{y \in Y} g(x, y)
+\end{equation}
+where $x$ is the input, $Y$ is the set of all possible output and $g$ is the loss function given by,
+\begin{equation}
+g(x, y) = w^T f(x, y)
+\end{equation}
+Here, the $f$ is feature function, and we use the linear chain CRF model to represent the feature function i.e. the linear combination of the feature potential(nodes) and the transition potential (edges). The parameters of $g(x,y)$ is learnt by minimizing a loss. We use the libraries provided in \emph{pystruct} for classifying the input variables.
+
 \subsection{Naive Bayes}
 The naive Bayes model is one of the most simplistic probabilistic models. Unlike the other models, the naive Bayes model assumes all data points are independently and identically distributed (i.i.d.), that is it does not take into account any temporal relations between data points. The model factorizes the joint probability over the datapoints as follows,
 \begin{equation}

@@ -72,20 +72,36 @@ We explore and implement the following techniques to recognize activities:
 %Many different models have been proposed for activity recognition, but no common benchmark for evaluating the performance of these models exists. In this project we implenent the state of the art probabilistic models used in activity recognition and show their performance on several real world datasets. Our results can be used as a baseline for comparing the performance of other pattern recognition methods (both probabilistic and non-probabilistic). 
 
 \subsection{Naive Bayes}
-Naive Bayes model is a simple probabilistic model that assumes independence between every pair of features. 
-The factorization of the joint probability over the datapoints as follows,
+Naive Bayes model is a simple probabilistic model that assumes independence between the features. 
+Under the conditional independence assumption, and using the Bayes rule, the conditional probability can be represented as : 
 \begin{equation}
-p({y}_{1:T},{x}_{1:T})=\prod_{t=1}^{T}p({{x}_{t}\mid {y}_{t}}^{})p({y}_{t})
+P(y_t \mid x_{t1}, \dots, x_{tn}) \propto P(y) \prod_{i=1}^{n} P(x_{ti} \mid y_t) 
 \end{equation}
-we apply the naive Bayes assumption, which means we model each sensor reading separately, requiring only
-\textit{N} parameters for each activity. The observation distribution therefore factorizes as
+where $y_t$ is the activity label, and $x_t$ is the vector of sensor readings at time t. The model can then be used to classify the labels as follows, 	
+
 \begin{equation}
-p({x}_{t}\mid{y}_{t}=i)=\prod_{n=1}^{N}p({{x}_{t}^{n}\mid {y}_{t}}=i)
+ \hat{y_t} = \arg\max_{y_t} P(y) \prod_{i=1}^{n} P(x_{ti} \mid y_t),
 \end{equation}
-where each sensor observation is modeled as an independent Bernoulli distribution, given by
+
+In our approach we assume that the distribution of $P(x_{ti} \mid y_t)$ is modeled by independent bernoulli distribution, given by
 \begin{equation}
-p({{x}_{t}^{n}\mid {y}_{t}}=i)={{\mu}_{ni}}^{{{x}_{t}}^n}{(1-{\mu}_{ni})}^{1-{{x}_{t}}^n}
+p({{x}_{t} \mid {y}_{t} = i})={{\mu}_{ni}}^{{{x}_{t}}}{(1-{\mu}_{ni})}^{1-{{x}_{t}}}
 \end{equation}
+
+%
+%The factorization of the joint probability over the datapoints as follows,
+%\begin{equation}
+%p({y}_{1:T},{x}_{1:T})=\prod_{t=1}^{T}p({{x}_{t}\mid {y}_{t}}^{})p({y}_{t})
+%\end{equation}
+%we apply the naive Bayes assumption, which means we model each sensor reading separately, requiring only
+%\textit{N} parameters for each activity. The observation distribution therefore factorizes as
+%\begin{equation}
+%p({x}_{t}\mid{y}_{t}=i)=\prod_{n=1}^{N}p({{x}_{t}^{n}\mid {y}_{t}}=i)
+%\end{equation}
+%where each sensor observation is modeled as an independent Bernoulli distribution, given by
+%\begin{equation}
+%p({{x}_{t}^{n}\mid {y}_{t}}=i)={{\mu}_{ni}}^{{{x}_{t}}^n}{(1-{\mu}_{ni})}^{1-{{x}_{t}}^n}
+%\end{equation}
 
 \subsection{Hidden Markov Models (HMM)}
 HMM is a generative probabilistic model that models the joint distribution of both the observed and the latent states. It is commonly used in recognizing temporal patterns such as handwriting and speech recognition, where the future state is dependent on the previous state.  In our project, the latent variable($\bf{y}$) is the activity performed by the user, and the observed variable($\bf{x}$) is the vector of sensor readings. 

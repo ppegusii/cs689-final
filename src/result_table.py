@@ -12,6 +12,7 @@ rep = {
     'change': 'Change',
     'data': 'Raw',
     'last': 'Last',
+    'lastchange': 'Last+Change',
 }
 
 
@@ -23,7 +24,9 @@ def main():
         'C': [],
     }
     confusions = ''
-    pattern = r'([a-z]+)_([ABC])((?:change)|(?:last)|(?:data))(\.|\d|_)'
+    # pattern = r'([a-z]+)_([ABC])((?:change)|(?:last)|(?:data))(\.|\d|_)'
+    pattern = (r'([a-z]+)_([ABC])((?:change)|(?:last)|(?:data)|(?:lastchange))'
+               r'(\.|\d|_)')
     for r, dns, fns in os.walk(args.metricDir):
         for fn in sorted(fns):
             match = re.search(pattern, fn)
@@ -64,8 +67,10 @@ def main():
                     confusions += '\\vspace{1cm}\\\\\n'
                     confusions += '\\begin{sideways}\n'
                     confusions += '\\tiny\n'
-                    confusions += cm.to_latex(escape=False,
-                        float_format=lambda x: '{:.1f}'.format(x*100))
+                    confusions += cm.to_latex(
+                        escape=False,
+                        float_format=lambda x: '{:.1f}'.format(x*100),
+                    )
                     confusions += '\\end{sideways}\n'
                     confusions += '\\normalsize\n'
                     confusions += '\\vspace{1cm}\\\\\n'
@@ -96,7 +101,10 @@ def main():
             f.write('{}'.format(tex))
             f.write('\\vspace{1cm}\\\\\n')
             # df.to_latex(f, formatters={'CV_Accuracy': lambda x: x})
-            # df.to_latex(f, formatters={'CV_Accuracy': lambda x: u'{}'.format(x)})
+            # df.to_latex(
+            #     f,
+            #     formatters={'CV_Accuracy': lambda x: u'{}'.format(x)},
+            # )
         f.write(confusions)
         f.write('\end{document}')
 

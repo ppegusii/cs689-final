@@ -1,10 +1,43 @@
-
-
 \section{Experimental Evaluation}
 
 \subsection{Datasets}
 
-Table~\ref{dataset} shows the summary of the dataset we use for our evaluation. We evaluate on 3 homes, each home having sensors deployed .
+
+Table~\ref{table:datasets}, shows the summary of the dataset we use for our evaluation. We evaluate on 3 homes, each home having sensors deployed .
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.35\textwidth}
+		\includegraphics[width=\textwidth]{fig/houseA.png}
+		\caption{House A}
+		\label{fig:houseA}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.35\textwidth}
+		\includegraphics[width=\textwidth]{fig/houseB.png}
+		\caption{House B}
+		\label{fig:houseB}
+	\end{subfigure}
+	\\
+	\begin{subfigure}[b]{0.35\textwidth}
+		\includegraphics[height=\textwidth,angle=90]{fig/houseC1.png}
+		\caption{House C first floor}
+		\label{fig:houseC1}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.35\textwidth}
+		\includegraphics[height=\textwidth,angle=90]{fig/houseC2.png}
+		\caption{House C second floor}
+		\label{fig:houseC2}
+	\end{subfigure}
+	\caption{Home floor plans and sensor locations.}\label{fig:houses}
+\end{figure}
+
+We evaluate our models on three datasets provided by \cite{tvkasteren2010}.
+Figure~\ref{fig:houses} displays the floor plans and sensor locations of the three residences 
+
+The Kasteren dataset is recording a 26-year-old man. He lives alone in a three-room apartment where 14 state-change sensors were installed. Locations of sensors include doors, cup- boards, refrigerator and a toilet flush sensor. Sensors were left unattended, collecting data for 28 days in the apartment. This resulted in 2120 sensor events and 245 activity instances.
+
 
 %The Kasteren dataset is recording a 26-year-old man. He lives alone in a three-room apartment where 14 state-change sensors were installed. Locations of sensors include doors, cup- boards, refrigerator and a toilet flush sensor. Sensors were left unattended, collecting data for 28 days in the apartment. This resulted in 2120 sensor events and 245 activity instances.
 %
@@ -15,7 +48,7 @@ Table~\ref{dataset} shows the summary of the dataset we use for our evaluation. 
 \begin{table*}[t!]
 \small
 \begin{center}
-\begin{tabular}{||c|c|c|c|||}
+\begin{tabular}{|c|c|c|c|}
 \hline
 \textbf{Type} & \emph{House A} & \emph{House B} & \emph{House C}\\ \hline
 \textbf{Age} & 26 & 28 & 27\\ \hline
@@ -30,7 +63,7 @@ Table~\ref{dataset} shows the summary of the dataset we use for our evaluation. 
 \end{center}
 %\vspace{-0.1cm}
 \caption{Dataset recording details}
-\label{table:dataset}
+\label{table:datasets}
 \vspace{-0.3cm}
 \end{table*}
 
@@ -55,11 +88,11 @@ Accuracy = \frac{TP+TN}{TP+TN+FP+FN}
 F-Measure = \frac{2\cdot Precision\cdot Recall}{Precison+Recall}
 \end{equation}
 
-The Matthews correlation coefficient is used in machine learning as a measure of the quality of binary (two-class) classifications, introduced by biochemist Brian W. Matthews in 1975. It takes into account true and false positives and negatives and is generally regarded as a balanced measure which can be used even if the classes are of very different sizes. The MCC is in essence a correlation coefficient between the observed and predicted binary classifications; it returns a value between ‚àí1 and +1. A coefficient of +1 represents a perfect prediction, 0 no better than random prediction and ‚àí1 indicates total disagreement between prediction and observation.
+%The Matthews correlation coefficient is used in machine learning as a measure of the quality of binary (two-class) classifications, introduced by biochemist Brian W. Matthews in 1975. It takes into account true and false positives and negatives and is generally regarded as a balanced measure which can be used even if the classes are of very different sizes. The MCC is in essence a correlation coefficient between the observed and predicted binary classifications; it returns a value between ‚àí1 and +1. A coefficient of +1 represents a perfect prediction, 0 no better than random prediction and ‚àí1 indicates total disagreement between prediction and observation.
 
-\begin{equation}
-MCC=\frac{TP\cdot TN-FP\cdot FN}{\sqrt{(TP+FP)\cdot (TP+FN)\cdot (TN+FP)\cdot (TN+FN)}}
-\end{equation}
+%\begin{equation}
+%MCC=\frac{TP\cdot TN-FP\cdot FN}{\sqrt{(TP+FP)\cdot (TP+FN)\cdot (TN+FP)\cdot (TN+FN)}}
+%\end{equation}
 
 
 \subsection{Discussion}

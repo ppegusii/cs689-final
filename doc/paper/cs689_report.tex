@@ -194,57 +194,60 @@ The datasets available to us are:
 
 %\section{Reference}
 
-\begin{thebibliography}{1}
-	
-\bibitem{emtapia} E. M. Tapia, S. S. Intille, and K. Larson. {\em Activity recognition in the home using simple and ubiquitous sensors}. In Pervasive Computing, Second International Conference, PERVASIVE 2004, pp. 158–175, Vienna, Austria (April, 2004).
+%\begin{thebibliography}{1}
+%	
+%\bibitem{emtapia} E. M. Tapia, S. S. Intille, and K. Larson. {\em Activity recognition in the home using simple and ubiquitous sensors}. In Pervasive Computing, Second International Conference, PERVASIVE 2004, pp. 158–175, Vienna, Austria (April, 2004).
+%
+%\bibitem{djpatt}  D. J. Patterson, D. Fox, H. A. Kautz, and M. Philipose. Fine-grained activity recognition by aggregating abstract object usage. In ISWC, pp. 44–51. IEEE Computer Society, (2005). ISBN 0-7695-2419-2. URL http://doi.ieeecomputersociety.org/10.1109/ISWC.2005.22.
+%
+%\bibitem{tvkasteren}  T. van Kasteren, A. Noulas, G. Englebienne, and B. Kro ̈se. Accurate activity recognition in a home setting. In UbiComp ’08: Proceedings of the 10th international conference on Ubiquitous computing, pp. 1–9, New York, NY, USA, (2008). ACM. ISBN 978-1-60558-136-1. doi: http: //doi.acm.org/10.1145/1409635.1409637.
+%
+%\bibitem{tduong}  T. Duong, D. Phung, H. Bui, and S. Venkatesh, Efficient duration and hierarchical modeling for human activity recognition, Artif. Intell. 173(7-8), 830–856, (2009). ISSN 0004-3702. doi: http://dx.doi.org/10.1016/j.artint.2008.12.005.
+%
+%\bibitem{sluhr}  S. Luhr, H. H. Bui, S. Venkatesh, and G. A. West, Recognition of human activity through hierarchical stochastic learning, percom. 00, 416, (2003). doi: http://doi.ieeecomputersociety. org/10.1109/PERCOM.2003.1192766.
+%
+%\bibitem{noliver}  N. Oliver, A. Garg, and E. Horvitz, Layered representations for learning and inferring office activity from multiple sensory channels, Comput. Vis. Image Underst. 96(2), 163–180, (2004). ISSN 1077-3142. doi: http://dx.doi.org/10.1016/j.cviu.2004.02.004.
+%
+%\bibitem{asubr}  A. Subramanya, A. Raj, J. Bilmes, and D. Fox. Hierarchical models for activity recognition. In IEEE Multimedia Signal Processing (MMSP) Conference, Victoria, CA (October, 2006).
+%
+%
+%\end{thebibliography}
 
-\bibitem{djpatt}  D. J. Patterson, D. Fox, H. A. Kautz, and M. Philipose. Fine-grained activity recognition by aggregating abstract object usage. In ISWC, pp. 44–51. IEEE Computer Society, (2005). ISBN 0-7695-2419-2. URL http://doi.ieeecomputersociety.org/10.1109/ISWC.2005.22.
-
-\bibitem{tvkasteren}  T. van Kasteren, A. Noulas, G. Englebienne, and B. Kro ̈se. Accurate activity recognition in a home setting. In UbiComp ’08: Proceedings of the 10th international conference on Ubiquitous computing, pp. 1–9, New York, NY, USA, (2008). ACM. ISBN 978-1-60558-136-1. doi: http: //doi.acm.org/10.1145/1409635.1409637.
-
-\bibitem{tduong}  T. Duong, D. Phung, H. Bui, and S. Venkatesh, Efficient duration and hierarchical modeling for human activity recognition, Artif. Intell. 173(7-8), 830–856, (2009). ISSN 0004-3702. doi: http://dx.doi.org/10.1016/j.artint.2008.12.005.
-
-\bibitem{sluhr}  S. Luhr, H. H. Bui, S. Venkatesh, and G. A. West, Recognition of human activity through hierarchical stochastic learning, percom. 00, 416, (2003). doi: http://doi.ieeecomputersociety. org/10.1109/PERCOM.2003.1192766.
-
-\bibitem{noliver}  N. Oliver, A. Garg, and E. Horvitz, Layered representations for learning and inferring office activity from multiple sensory channels, Comput. Vis. Image Underst. 96(2), 163–180, (2004). ISSN 1077-3142. doi: http://dx.doi.org/10.1016/j.cviu.2004.02.004.
-
-\bibitem{asubr}  A. Subramanya, A. Raj, J. Bilmes, and D. Fox. Hierarchical models for activity recognition. In IEEE Multimedia Signal Processing (MMSP) Conference, Victoria, CA (October, 2006).
-
-
-\end{thebibliography}
+\bibliographystyle{abbrv}
+\bibliography{cs689_report}
 
 \end{document}  
 
 
-\begin{enumerate}
- 
-\item Interesting because it has applications that spans across various domains:
-	\begin{enumerate}
-	\item Healthcare\\
-		- Long term monitoring of activities could provide us interesting insights on degenerative heath \\
-		- Especially useful in monitoring health of elderly people\\
-	\item  Energy savings \\
-		- Understanding the pattern of activities could help us save energy. \\
-		- For example, switching off AC/heater when no one is at home \\
-	\item  From a Security perspective\\
-		- Again, notifications can be sent to alert the home owners if there is an aberrant activity in the door entrance. \\
-	\item  Intelligent Homes\\
-		- 
-	\end{enumerate}
-\item Challenging
-		\begin{enumerate}
-	\item Sensor datasets could be noisy\\
-		- the front doors may open and close multiple times; this doesn't may not indicate that the person has left the home.\\
-		- sometimes the sensors itself may have false positives. \\
-		
-	\item multiple labels may be mapped to a single sensor activity\\
-		- opening of a fridge may mean both; make coffee and make cooking\\
-		- some other information such as how long the person spent in the kitchen may provide some useful insight\\
-		
-	\item Imbalanced class problem\\
-		- machine learning algorithms and works best when the number of instances of each classes are roughly equal\\
-		- where the total number of a class of data (positive) is far less than the total number of another class of data (negative)	\\
-		- In this problem, no activity is a perfectly reasonable label. So the prediction model may always output 'no activity' and be accurate 80\% of the time.\\
-		\end{enumerate}
-
-\end{enumerate}
+%\begin{enumerate}
+% 
+%\item Interesting because it has applications that spans across various domains:
+%	\begin{enumerate}
+%	\item Healthcare\\
+%		- Long term monitoring of activities could provide us interesting insights on degenerative heath \\
+%		- Especially useful in monitoring health of elderly people\\
+%	\item  Energy savings \\
+%		- Understanding the pattern of activities could help us save energy. \\
+%		- For example, switching off AC/heater when no one is at home \\
+%	\item  From a Security perspective\\
+%		- Again, notifications can be sent to alert the home owners if there is an aberrant activity in the door entrance. \\
+%	\item  Intelligent Homes\\
+%		- 
+%	\end{enumerate}
+%\item Challenging
+%		\begin{enumerate}
+%	\item Sensor datasets could be noisy\\
+%		- the front doors may open and close multiple times; this doesn't may not indicate that the person has left the home.\\
+%		- sometimes the sensors itself may have false positives. \\
+%		
+%	\item multiple labels may be mapped to a single sensor activity\\
+%		- opening of a fridge may mean both; make coffee and make cooking\\
+%		- some other information such as how long the person spent in the kitchen may provide some useful insight\\
+%		
+%	\item Imbalanced class problem\\
+%		- machine learning algorithms and works best when the number of instances of each classes are roughly equal\\
+%		- where the total number of a class of data (positive) is far less than the total number of another class of data (negative)	\\
+%		- In this problem, no activity is a perfectly reasonable label. So the prediction model may always output 'no activity' and be accurate 80\% of the time.\\
+%		\end{enumerate}
+%
+%\end{enumerate}

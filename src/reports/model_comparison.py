@@ -29,8 +29,7 @@ def get_data(house, f):
     CRF = get_json('../crf_models/output/crf_{house}{f}_all.json.gz'.format(house=house, f=f))
     SSVM = get_json('../ssvm_models/output/ssvm_{house}{f}_all.json.gz'.format(house=house, f=f))
     NB = get_json('../../results/nb/nb_{house}{f}.json.gz'.format(house=house, f=f))
-    #HMM = get_json('../../results/hmm/hmm_{house}{f}.json.gz'.format(house=house, f=f))
-    HMM = get_json('../hmm_model_f/hmm_{house}{f}_all.json.gz'.format(house=house, f=f))
+    HMM = get_json('../../results/hmm/hmm_{house}{f}.json.gz'.format(house=house, f=f))
 
     return SVM, CRF, SSVM, NB, HMM
 
@@ -46,7 +45,7 @@ def main():
         if os.path.exists(fname):
             [svm_arr, crf_arr, ssvm_arr, nb_arr, hmm_arr] = get_json(fname)
         else:
-            for f in ['data', 'change', 'last']:
+            for f in ['data', 'change', 'last', 'lastchange']:
                 svm, crf, ssvm, nb, hmm = get_data(house, f)
                 res = map(lambda x: get_accuracy_std(x), [svm, crf, ssvm, nb, hmm])
                 svm_arr.append(res[0])
@@ -63,7 +62,7 @@ def unpack(arr, index):
 
 def draw_graph(house, svm_arr, crf_arr, ssvm_arr, nb_arr, hmm_arr):
     width = 0.15       # the width of the bars
-    N = 3
+    N = 4
     ind = np.arange(N)  # the x locations for the groups
     fig, ax = plt.subplots()
 
@@ -88,7 +87,7 @@ def draw_graph(house, svm_arr, crf_arr, ssvm_arr, nb_arr, hmm_arr):
     # add some text for labels, title and axes ticks
     ax.set_ylabel('Accuracy (%)')
     ax.set_xticks(ind + width)
-    ax.set_xticklabels(('Raw', 'Change', 'Last'))
+    ax.set_xticklabels(('Raw', 'Change', 'Last', 'Last+Change'))
 
     labels =  ('HMM','CRF', 'SVM', 'SSVM','Naive Bayes')
     rects = (rects1[0], rects2[0], rects3[0], rects4[0], rects5[0])

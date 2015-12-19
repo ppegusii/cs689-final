@@ -50,8 +50,8 @@ Clearly, activity recognition is a challenging problem. Thus, we chose a dataset
 %is a tedious time consuming process, this limits the number of effective techniques. Second, patterns in training data are specific to the home and the individual. Therefore, the 
 %performance of the different machine learning technique may vary widely over a real world dataset. Finally, dominant classes may confound machine learning techniques.
 
-To further our knowledge of machine learning, we will conduct a comprehensive empirical analysis of proposed methods in this domain. These methods include Hidden Markov Models(HMM), Conditional Random Fields(CRF), Support Vector Machines(SVM), and Structured Support Vector Machines(SSVM) and Naive Bayes (NB). We implemented the models in Python and apply these methods to Kasteren-a real world dataset. By applying these techniques to real-world datasets and explaining the differences and similarities in their performances, we will gain a deeper understanding of machine learning. Furthermore, 
-Our evaluation results could be used as a baseline for other pattern recognizing area rather than home activity recognizing.
+%To further our knowledge of machine learning, we will conduct a comprehensive empirical analysis of proposed methods in this domain. These methods include Hidden Markov Models(HMM), Conditional Random Fields(CRF), Support Vector Machines(SVM), and Structured Support Vector Machines(SSVM) and Naive Bayes (NB). We implemented the models in Python and apply these methods to Kasteren-a real world dataset. By applying these techniques to real-world datasets and explaining the differences and similarities in their performances, we will gain a deeper understanding of machine learning. Furthermore, 
+%Our evaluation results could be used as a baseline for other pattern recognizing area rather than home activity recognizing.
 
 \section{Related Works}
 
@@ -59,28 +59,27 @@ The probabilistic models discussed in our project represent the state of the art
 The related works show part of the models in their work, respectively. It is hard to compare across different works. Instead, we implemented a set of models and ran the experiments on the same real word dataset. The evaluation results could be used as the baseline for future research. 
 
 
-\section{Problem definition}
+\section{Approach}
 
-Inferring and recongizing occupant activities using sensors home deployed sensors requires us to solve the following issues. 
+We explore and implement the following techniques to recognize activities:
+%Inferring and recognizing occupant activities using sensors home deployed sensors requires us to solve the following issues. 
+%
+%First, the start and end time of a performed activity is unknown. When activities are performed around the house there is no clear indication when one activity ends and another one starts. 
+%
+%Second, there is ambiguity in the observed sensor data with respect to which activity is taking place. For example, cooking and getting a drink both involve opening the fridge. Sensors can measure that the fridge is opened, but not which item is taken from the fridge. 
+%
+%Third, activities can be performed in a large number of ways, making it difficult to create a general description of an activity. 
+%
+%Fourth, observed sensor data is noisy. Noise can either be caused by a human making a mistake, for example opening a wrong cupboard, or by the sensor system which fails to transmit a sensor reading due to a network glitch.
+%
+%These issues make activity recognition a very challenging task. 
+%
+%Many different models have been proposed for activity recognition, but no common benchmark for evaluating the performance of these models exists. In this project we implenent the state of the art probabilistic models used in activity recognition and show their performance on several real world datasets. Our results can be used as a baseline for comparing the performance of other pattern recognition methods (both probabilistic and non-probabilistic). 
 
-First, the start and end time of a performed activity is unknown. When activities are performed around the house there is no clear indication when one activity ends and another one starts. 
 
-Second, there is ambiguity in the observed sensor data with respect to which activity is taking place. For example, cooking and getting a drink both involve opening the fridge. Sensors can measure that the fridge is opened, but not which item is taken from the fridge. 
-
-Third, activities can be performed in a large number of ways, making it difficult to create a general description of an activity. 
-
-Fourth, observed sensor data is noisy. Noise can either be caused by a human making a mistake, for example opening a wrong cupboard, or by the sensor system which fails to transmit a sensor reading due to a network glitch.
-
-These issues make activity recognition a very challenging task. 
-
-Many different models have been proposed for activity recognition, but no common benchmark for evaluating the performance of these models exists. In this project we implenent the state of the art probabilistic models used in activity recognition and show their performance on several real world datasets. Our results can be used as a baseline for comparing the performance of other pattern recognition methods (both probabilistic and non-probabilistic). 
-
-
-\section{Recognizing Methods}
-We explore and implement the following techniques:
-\begin{enumerate}
-\item HMM - 
-Hidden Markov Modes (HMM) are a ubiquitous tool for modeling time series data and a generative probabilistic model consisting of a hidden variable and an observable variable at each time step. HMM can be used as black-box density models on sequences. They have the advantage over Markov models in that they can represent long-range dependencies between observations, mediated via the latent variables. 
+\subsection{Hidden Markov Modes}
+HMM is a generative probabilistic model that is effective in modeling time series data. 
+HMM can be used as black-box density models on sequences. They have the advantage over Markov models in that they can represent long-range dependencies between observations, mediated via the latent variables. 
 In our project the hidden variable is the activity performed, and the observable variable is the vector of sensor readings. There are two dependency assumptions: The hidden variable at time t, namely $y_{t}$, depends only on the previous hidden variable $y_{t-1}$. The observable variable at time t, namely $x_{t}$, depends only on the hidden variable $y_{t}$ at that time slice. Then, we can specify an HMM using three probability distributions: the distribution over initial states p($y_{1}$); the transition distribution $p(y_{t}\mid y_{t-1})$ representing the probability of going from one state to the next; and the observation distribution $p(x_{t}\mid y_{t})$ indicating the probability that the state yt would generate observation $x_{t}$.
 Learning the parameters of these distributions corresponds to maximizing the joint probability p(x, y) of the paired observation and label sequences in the training data. We can factorize the joint distribution in terms of the three distributions described above as follows:
 
@@ -90,7 +89,7 @@ P(x,y)=\prod_{t=1}^{T}p(y_{t}\mid y_{t-1})p(x_{t}\mid y_{t}), p(y_{1}) = p(y_{1}
 
 The parameters that maximize this joint probability are found by frequency counting. Because in our case we are dealing with discrete data, we can simply count the number of occurrences of transitions, observations and states~\cite{emtapia}.
 
-\item CRF - 
+\subsection{Conditional Random Fields}
 A CRF using the first-order Markov assumption is called a linear-chain CRF and most closely resembles the HMM in terms of structure. We define the linear-chain CRF as a discriminative analog of the previously defined HMM, so that the conditional distribution is defined as
 \begin{equation}
 p(y\mid x)=\frac{1}{Z(x)}exp\left[{\sum_{k=1}^{K}}{\lambda}_{k}{f}_{k}({y}_{t},{y}_{t-1},{x}_{t})\right]
@@ -101,12 +100,11 @@ where \textit{K} is the number of feature functions used to parameterize the dis
 Z(x)=\sum_{y}^{}exp\left[{\sum_{k=1}^{K}}{\lambda}_{k}{f}_{k}({y}_{t},{y}_{t-1},{x}_{t})\right]
 \end{equation}
 
-\item SVM - 
-The implementation used in this experiment comes from SVM
+\subsection{SVM}  The implementation used in this experiment comes from SVM
 
-\item SSVM - 
+\subsection{SSVM}
 
-\item Naive Bayes.
+\subsection{Naive Bayes}
 The naive Bayes model is one of the most simplistic probabilistic models. Unlike the other models, the naive Bayes model assumes all data points are independently and identically distributed (i.i.d.), that is it does not take into account any temporal relations between datapoints. The model factorizes the joint probability over the datapoints as follows,
 \begin{equation}
 p({y}_{1:T},{x}_{1:T})=\prod_{t=1}^{T}p({{x}_{t}\mid {y}_{t}}^{})p({y}_{t})
@@ -121,7 +119,7 @@ where each sensor observation is modeled as an independent Bernoulli distributio
 p({{x}_{t}^{n}\mid {y}_{t}}=i)={{\mu}_{ni}}^{{{x}_{t}}^n}{(1-{\mu}_{ni})}^{1-{{x}_{t}}^n}
 \end{equation}
 
-\end{enumerate}
+
 
 \iffalse
 The datasets available to us are:
@@ -211,7 +209,7 @@ MCC=\frac{TP\cdot TN-FP\cdot FN}{\sqrt{(TP+FP)\cdot (TP+FN)\cdot (TN+FP)\cdot (T
 
 
 \subsection{Experiments}
-\pdfsuppresswarningpagegroup=1
+%\pdfsuppresswarningpagegroup=1
 \begin{figure}[t!]
 \begin{center}
 \includegraphics[width=5in]{../../src/reports/A.pdf}

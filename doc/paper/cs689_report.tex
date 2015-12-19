@@ -72,7 +72,7 @@ We explore and implement the following techniques to recognize activities:
 %Many different models have been proposed for activity recognition, but no common benchmark for evaluating the performance of these models exists. In this project we implenent the state of the art probabilistic models used in activity recognition and show their performance on several real world datasets. Our results can be used as a baseline for comparing the performance of other pattern recognition methods (both probabilistic and non-probabilistic). 
 
 
-\subsection{Hidden Markov Modes}
+\subsection{Hidden Markov Models (HMM)}
 HMM is a generative probabilistic model that models the joint distribution of both the observed and the latent states. It is commonly used in recognizing temporal patterns such as handwriting and speech recognition, where the future state is dependent on the previous state.  In our project, the latent variable($\bf{y}$) is the activity performed by the user, and the observed variable($\bf{x}$) is the vector of sensor readings. 
 
 At each time step $t$, the latent variable $y_t$ depends only on the previous hidden variable $y_{t-1}$ and variables before $t-1$have no influence on it (Markov Property). The observed variable $x_t$, at time $t$, depends only on the latent variable $y_t$. The parameters of the HMM model are the transition probabilities $p(y_{t}\mid y_{t-1})$ i.e.  the probability of going from one state to another; and the emission probability $p(x_{t}\mid y_{t})$ i.e. the probability that the state $y_t$ would generate observation $x_{t}$. In order to learn the parameters of the distribution, one can maximize the joint probability $P(x,y)$ of the observed and latent sequences in the training data. The joint probability can be factorized as follows:
@@ -86,7 +86,7 @@ P(x,y)=\prod_{t=1}^{T}p(y_{t}\mid y_{t-1})p(x_{t}\mid y_{t}), p(y_{1}) = p(y_{1}
 
 Since the data is discrete in nature, frequency counting can be used to learn the parameters. We use Viterbi algorithm to infer the sequence of activity labels from the observed sensor reading sequences. 
 
-\subsection{Conditional Random Fields}
+\subsection{Conditional Random Fields (CRF)}
 We use linear-chain CRF to represent the latent and observed variables as it closely resembles the HMM in terms of structure. Since, CRF is a discriminative probabilistic model, we can model the conditional probability distribution $P(y \mid x)$, to predict $y$ from $x$. Thus, the parameters are learnt by maximizing the following  conditional probability distribution $P(y \mid x)$,
 %We define the linear-chain CRF as a discriminative analog of the previously defined HMM, so that the conditional distribution is defined as
 \begin{equation}
@@ -101,14 +101,23 @@ The product of the parameters and the feature function ${\lambda}_{k}{f}_{k}({y}
 Z(x)=\sum_{y}^{}exp\left[{\sum_{k=1}^{K}}{\lambda}_{k}{f}_{k}({y}_{t},{y}_{t-1},{x}_{t})\right]
 \end{equation}
 
-In our approach, we use the BFGS method to learn the parameters of the model.
+In our approach, we use the BFGS method to learn the parameters of the model. 
 
-\subsection{SVM}  The implementation used in this experiment comes from SVM
+\subsection{Support Vector Machines (SVM)}  
+SVM is a discriminative classifier that builds a hyperplane that can be used for classification or regression purposes. It constructs this hyperplane such that 
+the distance between the hyperplane and the nearest point is maximized.  In particular, the problem can be seen as minimizing a loss function that can be represented as following:
 
-\subsection{SSVM}
-
+\begin{align*}
+\min_{w, \beta} L(w) = \frac{1}{2}||w||^{2} \\ 
+\text{ subject to } y_{i}(w^{T} x_{i} + \beta) \geq 1 \text{ } \forall i,
+\end{align*}
+where $x_i$ are the training examples, $y_i$ represent the labels, $w$ represents the weight vector and $\beta$ is the bias. In our approach, we use
+a Linear SVM for classification.
+ 
+\subsection{Structured SVM}
+Structure SVM
 \subsection{Naive Bayes}
-The naive Bayes model is one of the most simplistic probabilistic models. Unlike the other models, the naive Bayes model assumes all data points are independently and identically distributed (i.i.d.), that is it does not take into account any temporal relations between datapoints. The model factorizes the joint probability over the datapoints as follows,
+The naive Bayes model is one of the most simplistic probabilistic models. Unlike the other models, the naive Bayes model assumes all data points are independently and identically distributed (i.i.d.), that is it does not take into account any temporal relations between data points. The model factorizes the joint probability over the datapoints as follows,
 \begin{equation}
 p({y}_{1:T},{x}_{1:T})=\prod_{t=1}^{T}p({{x}_{t}\mid {y}_{t}}^{})p({y}_{t})
 \end{equation}
@@ -121,7 +130,6 @@ where each sensor observation is modeled as an independent Bernoulli distributio
 \begin{equation}
 p({{x}_{t}^{n}\mid {y}_{t}}=i)={{\mu}_{ni}}^{{{x}_{t}}^n}{(1-{\mu}_{ni})}^{1-{{x}_{t}}^n}
 \end{equation}
-
 
 
 \iffalse

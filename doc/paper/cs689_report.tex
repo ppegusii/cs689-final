@@ -190,8 +190,16 @@ The datasets available to us are:
 \input{evaluation}
 
 
-
 \section{Conclusions and Lessons Learned}
+In this project, we evaluated both probabilistic and non-proabilstic models on activity recognition problem. We used different feature representations to capture the underlying model. We observed that the Naive Bayes approach works well even though it had a very simple model. However, we believe that further optimizations could have been done to further test the boundaries of other models. In doing this project, we learnt a lot about how to use different models and packages and its limitations. Following are some of the lessons we learnt that may be useful to others:
+\begin{enumerate}
+\item Using numpy over traditional list in python definitely improves the performance. 
+\item Pandas is a handy package for data manipulation
+\item For SSVM, we used the pystruct package. Pystruct package has issues in dealing with labels that are not ordered sequentially and may throw errors if not handled well
+\item CRFSuite is an efficient and flexible package for creating CRF models. 
+\end{enumerate}
+
+
 
 
 %\section{Reference}

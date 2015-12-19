@@ -73,16 +73,18 @@ We explore and implement the following techniques to recognize activities:
 
 
 \subsection{Hidden Markov Modes}
-HMM is a generative probabilistic model that is effective in modeling time series data. 
-HMM can be used as black-box density models on sequences. They have the advantage over Markov models in that they can represent long-range dependencies between observations, mediated via the latent variables. 
-In our project the hidden variable is the activity performed, and the observable variable is the vector of sensor readings. There are two dependency assumptions: The hidden variable at time t, namely $y_{t}$, depends only on the previous hidden variable $y_{t-1}$. The observable variable at time t, namely $x_{t}$, depends only on the hidden variable $y_{t}$ at that time slice. Then, we can specify an HMM using three probability distributions: the distribution over initial states p($y_{1}$); the transition distribution $p(y_{t}\mid y_{t-1})$ representing the probability of going from one state to the next; and the observation distribution $p(x_{t}\mid y_{t})$ indicating the probability that the state yt would generate observation $x_{t}$.
-Learning the parameters of these distributions corresponds to maximizing the joint probability p(x, y) of the paired observation and label sequences in the training data. We can factorize the joint distribution in terms of the three distributions described above as follows:
+HMM is a generative probabilistic model that models the joint distribution of both the observed and the latent states. It is commonly used in recognizing temporal patterns such as handwriting and speech recognition, where the future state is dependent on the previous state.  In our project, the latent variable($\bf{y}$) is the activity performed by the user, and the observed variable($\bf{x}$) is the vector of sensor readings. 
+
+At each time step $t$, the latent variable $y_t$ depends only on the previous hidden variable $y_{t-1}$ and variables before $t-1$have no influence on it (Markov Property). The observed variable $x_t$, at time $t$, depends only on the latent variable $y_t$. The parameters of the HMM model are the transition probabilities $p(y_{t}\mid y_{t-1})$ i.e.  the probability of going from one state to another; and the emission probability $p(x_{t}\mid y_{t})$ i.e. the probability that the state $y_t$ would generate observation $x_{t}$. In order to learn the parameters of the distribution, one can maximize the joint probability $P(x,y)$ of the observed and latent sequences in the training data. The joint probability can be factorized as follows:
+
+%There are two dependency assumptions: The hidden variable at time t, namely $y_{t}$, depends only on the previous hidden variable $y_{t-1}$. The observable variable at time t, namely $x_{t}$, depends only on the hidden variable $y_{t}$ at that time slice. Then, we can specify an HMM using three probability distributions: the distribution over initial states p($y_{1}$); the transition distribution $p(y_{t}\mid y_{t-1})$ representing the probability of going from one state to the next; and the observation distribution $p(x_{t}\mid y_{t})$ indicating the probability that the state yt would generate observation $x_{t}$.
+%Learning the parameters of these distributions corresponds to maximizing the joint probability p(x, y) of the paired observation and label sequences in the training data. We can factorize the joint distribution in terms of the three distributions described above as follows:
 
 \begin{equation}
 P(x,y)=\prod_{t=1}^{T}p(y_{t}\mid y_{t-1})p(x_{t}\mid y_{t}), p(y_{1}) = p(y_{1}\mid y_{0})
 \end{equation}
 
-The parameters that maximize this joint probability are found by frequency counting. Because in our case we are dealing with discrete data, we can simply count the number of occurrences of transitions, observations and states~\cite{emtapia}.
+Since the data is discrete in nature, frequency counting can be used to learn the parameters. We use Viterbi algorithm to infer the sequence of activity labels from the observed sensor reading sequences. 
 
 \subsection{Conditional Random Fields}
 A CRF using the first-order Markov assumption is called a linear-chain CRF and most closely resembles the HMM in terms of structure. We define the linear-chain CRF as a discriminative analog of the previously defined HMM, so that the conditional distribution is defined as

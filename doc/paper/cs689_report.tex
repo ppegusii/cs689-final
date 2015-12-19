@@ -87,15 +87,21 @@ P(x,y)=\prod_{t=1}^{T}p(y_{t}\mid y_{t-1})p(x_{t}\mid y_{t}), p(y_{1}) = p(y_{1}
 Since the data is discrete in nature, frequency counting can be used to learn the parameters. We use Viterbi algorithm to infer the sequence of activity labels from the observed sensor reading sequences. 
 
 \subsection{Conditional Random Fields}
-A CRF using the first-order Markov assumption is called a linear-chain CRF and most closely resembles the HMM in terms of structure. We define the linear-chain CRF as a discriminative analog of the previously defined HMM, so that the conditional distribution is defined as
+We use linear-chain CRF to represent the latent and observed variables as it closely resembles the HMM in terms of structure. Since, CRF is a discriminative probabilistic model, we can model the conditional probability distribution $P(y \mid x)$, to predict $y$ from $x$. Thus, the parameters are learnt by maximizing the following  conditional probability distribution $P(y \mid x)$,
+%We define the linear-chain CRF as a discriminative analog of the previously defined HMM, so that the conditional distribution is defined as
 \begin{equation}
 p(y\mid x)=\frac{1}{Z(x)}exp\left[{\sum_{k=1}^{K}}{\lambda}_{k}{f}_{k}({y}_{t},{y}_{t-1},{x}_{t})\right]
 \end{equation}
-where \textit{K} is the number of feature functions used to parameterize the distribution,${\lambda}_{k}$ is the weight parameter and ${f}_{k}({y}_{t},{y}_{t-1},{x}_{t})$ is the feather function. The product of the parameters and the feature function${\lambda}_{k}{f}_{k}({y}_{t},{y}_{t-1},{x}_{t})$ is called energy function, while the exponential representation is the potential function. The partiton function \textit{Z(x)} is normalization term in order to make the distribution sums up to one and obtains a probabilistic interpretation.
+where \textit{K} is the number of feature functions used to parameterize the distribution, ${\lambda}_{k}$ is the weight parameter and ${f}_{k}({y}_{t},{y}_{t-1},{x}_{t})$ is a feature function. 
+The product of the parameters and the feature function ${\lambda}_{k}{f}_{k}({y}_{t},{y}_{t-1},{x}_{t})$ is called the energy function, while the exponential representation is the potential function. The partition function \textit{Z(x)} is a normalization constant that sums over all the potential functions and is given as follows:
+
+%where \textit{K} is the number of feature functions used to parameterize the distribution, ${\lambda}_{k}$ is the weight parameter and ${f}_{k}({y}_{t},{y}_{t-1},{x}_{t})$ is the feather function. The product of the parameters and the feature function${\lambda}_{k}{f}_{k}({y}_{t},{y}_{t-1},{x}_{t})$ is called energy function, while the exponential representation is the potential function. The partiton function \textit{Z(x)} is normalization term in order to make the distribution sums up to one and obtains a probabilistic interpretation.
 
 \begin{equation}
 Z(x)=\sum_{y}^{}exp\left[{\sum_{k=1}^{K}}{\lambda}_{k}{f}_{k}({y}_{t},{y}_{t-1},{x}_{t})\right]
 \end{equation}
+
+In our approach, we use the BFGS method to learn the parameters of the model.
 
 \subsection{SVM}  The implementation used in this experiment comes from SVM
 

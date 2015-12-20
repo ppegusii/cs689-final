@@ -12,6 +12,7 @@
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{rotating}
+\usepackage{url}
 \newcommand*{\rot}{\rotatebox{90}}
 \title{HomeActivity: Recognizing home activities using sensor data}
 \author{Stephen Lee, Patrick Pegus and Dong Chen\\ 
@@ -22,24 +23,35 @@ ML Final Project}
 \maketitle
 %\section{}
 %\subsection{}
-\section{Abstract:}
+%\section{Abstract:}
+\begin{abstract}
 
 In this project, we user sensors deployed in homes to identify activities. The actuation of sensors provides a unique set of feature representation that allows us to identity 
-the type of activity being undertaken by the user. The goal of our project is to use these sensor information to infer activities under different methodologies and analyze their 
+the type of activity being undertaken by the user. The goal of our project is to use this sensor information to infer activities under different methodologies and analyze their 
 performance.  We use datasets from three different houses that are annotated manually to get the 'ground truth'.  To capture the underlying model, we use different feature representations from the sensors. We present our results and discuss our findings. 
+\end{abstract}
  
 
 %Recognizing home activities allows many potential smart applications including healthcare and energy efficiency. In this project, we present the state of the art models for recognizing activities, and show how they performance on the Kasteren-a real world dataset. 
 %Comparative analysis metrics including precision, recall, accuracy, F1 mesure and MCC are used in the experiments. Our evaluation results could be used for other pattern recognizing area rather than home activity recognizing.
 
 \section{Introduction}
-According to a recent study,  it is estimated that almost 25+ billion Internet of Things (IoT) devices will be deployed across homes. Moreover, around 50 trillion GBs of 
+According to a recent study,  it is estimated that almost 25+ billion Internet of Things (IoT) devices will be deployed across homes~\cite{gartner}. Moreover, around 50 trillion GBs of 
 data will be collected using these sensors. The information collected can be used to enrich the interaction between users and the physical devices. For example, NEST thermostat, 
-an intelligent programmable thermostat, learns the occupancy of humans in a home using sensors to automatically turn on/off heating or air conditioning and save energy costs. These sensor information can be used to learn other information such as monitoring the activities of a person (e.g. elderly home) and being able to detect anomalies in behavior over time. In this project, we focus on recognizing the activities of a person using the sensor information available. i.e. We study different techniques to identify when the person is sleeping, eating etc. 
+an intelligent programmable thermostat, learns the occupancy of humans in a home using sensors to automatically turn on/off heating or air conditioning and save energy costs. This sensor information can be used to learn other information such as monitoring the activities of a person (e.g. elderly home) and being able to detect anomalies in behavior over time. In this project, we focus on recognizing the activities of a person using the sensor information available. i.e. We study different techniques to identify when the person is sleeping, eating etc. 
 
 Activity recognition has been a widely studied area and provides a set of challenges in itself. First, ambiguity exists if there are more than one activity happening concurrently at any given time, such as watching TV and eating a snack. Also, this muddles the distinction between the start and end of an activity. Second, activation of a sensor may represent doing a similar activity. For example, opening the fridge could represent 'getting a snack' activity or 'cooking' activity'. Third, the information could be noisy e.g. with misfiring sensors or a mistakes made by humans such as unintentionally opening a cupboard or entering a room. Fourth, recognizing activities has class imbalance as certain activity labels tend to be longer than others. For example, lying on bed or couch, staying idle, or 'not at home' could easily represent the dominant classes in these datasets. 
 
-Clearly, activity recognition is a challenging problem. Thus, we chose a dataset wherein the homes was occupied by a single user. We construct features using the binary sensors installed in these homes that we will describe later in section. In fact, we construct multiple feature representations to study the problem and follow closely the approaches studied by Kasteren~\cite{tvkasteren} among others. In the following section, we will be describing our approach, and discuss its performance and lessons learned from undertaking this project.
+Clearly, activity recognition is a challenging problem. Thus, we chose a dataset wherein the homes were occupied by a single user.
+We construct features using the binary sensors installed in these homes.
+%that we will describe later in section~\ref{sec:approach}.
+In fact, we construct multiple feature representations to study the problem and follow closely the approaches studied by Kasteren~\cite{tvkasteren} among others.
+%In the following section, we will be describing our approach, and discuss its performance and lessons learned from undertaking this project.
+
+We briefly review related work in Section~\ref{sec:related}.
+In Section~\ref{sec:approach}, we introduce the different feature representations and models we employ.
+In Section~\ref{sec:eval}, we describe the datasets and present our experimental results.
+Finally, we conclude in Section~\ref{sec:conclude}
 
 
 %Automatically recognizing human activities such as cooking, sleeping and bathing, in a home setting allows many applications in areas such as intelligent environments and 
@@ -58,10 +70,31 @@ Clearly, activity recognition is a challenging problem. Thus, we chose a dataset
 %Our evaluation results could be used as a baseline for other pattern recognizing area rather than home activity recognizing.
 \input{relatedwork}
 
-\section{Approach}
+\section{Approach}\label{sec:approach}
 
 \subsection{Feature Representation}
-We describe the feature representation we use for classification purpose:
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{fig/raw.png}
+		\caption{Raw}
+		\label{fig:raw}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{fig/change.png}
+		\caption{Change}
+		\label{fig:change}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{fig/last.png}
+		\caption{Last}
+		\label{fig:last}
+	\end{subfigure}
+	\caption{Feature representations.}\label{fig:reps}
+\end{figure}
+We describe the feature representation we use for classification purpose as shown in Figure~\ref{fig:reps}:
 \begin{enumerate}
 \item \textbf{Raw}: This uses the binary sensors readings directly. For each time step $t$, it takes the value of 1 or 0 depending on whether the sensor is actuated. 
 %the raw sensor representation uses the sensor data directly as it was received from the sensors. It gives a 1 when the sensor is firing and a 0 otherwise 
@@ -69,11 +102,11 @@ We describe the feature representation we use for classification purpose:
 %The change point representation indicates when a sensor event takes place. That is, it indicates when a sensor changes value. More formally, it gives a 1 when a sensor changes state (i.e. goes from zero to one or vice versa) and a 0 otherwise.
 \item \textbf{Last}: The feature continues to have the sensor value as 1 until another sensor changes its state. 
 %The last-fired sensor representation indicates which sensor fired last. The sensor that changed state last continues to give 1 and changes to 0 when another sensor changes state 
-\item \textbf{Last + Change}: This feature combines the Last+Change representations. 
+\item \textbf{Last + Change}: This feature combines the Last and Change representations by concatenating the feature vectors. 
 \end{enumerate}
 
 \subsection{Models}
-We explore and implement the following techniques to recognize activities:
+We explore the following techniques to recognize activities:
 %Inferring and recognizing occupant activities using sensors home deployed sensors requires us to solve the following issues. 
 %
 %First, the start and end time of a performed activity is unknown. When activities are performed around the house there is no clear indication when one activity ends and another one starts. 
@@ -94,13 +127,13 @@ Under the conditional independence assumption, and using the Bayes rule, the con
 \begin{equation}
 P(y_t \mid x_{t1}, \dots, x_{tn}) \propto P(y) \prod_{i=1}^{n} P(x_{ti} \mid y_t) 
 \end{equation}
-where $y_t$ is the activity label, and $x_t$ is the vector of sensor readings at time t. The model can then be used to classify the labels as follows, 	
+where $y_t$ is the activity label, and $x_t$ is the vector of sensor readings at time $t$. The model can then be used to classify the labels as follows, 	
 
 \begin{equation}
  \hat{y_t} = \arg\max_{y_t} P(y) \prod_{i=1}^{n} P(x_{ti} \mid y_t),
 \end{equation}
 
-In our approach we assume that the distribution of $P(x_{ti} \mid y_t)$ is modeled by independent bernoulli distribution, given by
+In our approach we assume that the distribution of $P(x_{ti} \mid y_t)$ is modeled by independent Bernoulli distribution, given by
 \begin{equation}
 p({{x}_{t} \mid {y}_{t} = i})={{\mu}_{ni}}^{{{x}_{t}}}{(1-{\mu}_{ni})}^{1-{{x}_{t}}}
 \end{equation}
@@ -123,7 +156,7 @@ p({{x}_{t} \mid {y}_{t} = i})={{\mu}_{ni}}^{{{x}_{t}}}{(1-{\mu}_{ni})}^{1-{{x}_{
 \subsubsection{Hidden Markov Models (HMM)}
 HMM is a generative probabilistic model that models the joint distribution of both the observed and the latent states. It is commonly used in recognizing temporal patterns such as handwriting and speech recognition, where the future state is dependent on the previous state.  In our project, the latent variable($\bf{y}$) is the activity performed by the user, and the observed variable($\bf{x}$) is the vector of sensor readings. 
 
-At each time step $t$, the latent variable $y_t$ depends only on the previous hidden variable $y_{t-1}$ and variables before $t-1$have no influence on it (Markov Property). The observed variable $x_t$, at time $t$, depends only on the latent variable $y_t$. The parameters of the HMM model are the transition probabilities $p(y_{t}\mid y_{t-1})$ i.e.  the probability of going from one state to another; and the emission probability $p(x_{t}\mid y_{t})$ i.e. the probability that the state $y_t$ would generate observation $x_{t}$. In order to learn the parameters of the distribution, one can maximize the joint probability $P(x,y)$ of the observed and latent sequences in the training data. The joint probability can be factorized as follows:
+At each time step $t$, the latent variable $y_t$ depends only on the previous hidden variable $y_{t-1}$ and variables before $t-1$ have no influence on it (Markov Property). The observed variable $x_t$, at time $t$, depends only on the latent variable $y_t$. The parameters of the HMM model are the transition probabilities $p(y_{t}\mid y_{t-1})$ i.e.  the probability of going from one state to another; and the emission probability $p(x_{t}\mid y_{t})$ i.e. the probability that the state $y_t$ would generate observation $x_{t}$. In order to learn the parameters of the distribution, one can maximize the joint probability $P(x,y)$ of the observed and latent sequences in the training data. The joint probability can be factorized as follows:
 
 %There are two dependency assumptions: The hidden variable at time t, namely $y_{t}$, depends only on the previous hidden variable $y_{t-1}$. The observable variable at time t, namely $x_{t}$, depends only on the hidden variable $y_{t}$ at that time slice. Then, we can specify an HMM using three probability distributions: the distribution over initial states p($y_{1}$); the transition distribution $p(y_{t}\mid y_{t-1})$ representing the probability of going from one state to the next; and the observation distribution $p(x_{t}\mid y_{t})$ indicating the probability that the state yt would generate observation $x_{t}$.
 %Learning the parameters of these distributions corresponds to maximizing the joint probability p(x, y) of the paired observation and label sequences in the training data. We can factorize the joint distribution in terms of the three distributions described above as follows:
@@ -190,12 +223,12 @@ The datasets available to us are:
 \input{evaluation}
 
 
-\section{Conclusions and Lessons Learned}
-In this project, we evaluated both probabilistic and non-proabilstic models on activity recognition problem. We used different feature representations to capture the underlying model. We observed that the Naive Bayes approach works well even though it had a very simple model. However, we believe that further optimizations could have been done to further test the boundaries of other models. In doing this project, we learnt a lot about how to use different models and packages and its limitations. Following are some of the lessons we learnt that may be useful to others:
+\section{Conclusions and Lessons Learned}\label{sec:conclude}
+In this project, we evaluated both probabilistic and non-probabilistic models on activity recognition problem. We used different feature representations to capture the underlying model. We observed that the Naive Bayes approach works well even though it had a very simple model. However, we believe that further optimizations could have been done to further test the boundaries of other models. In doing this project, we learned a lot about how to use different models, packages, and their limitations. Following are some of the lessons we learned that may be useful to others:
 \begin{enumerate}
-\item Using numpy over traditional list in python definitely improves the performance. 
-\item Pandas is a handy package for data manipulation
-\item For SSVM, we used the pystruct package. Pystruct package has issues in dealing with labels that are not ordered sequentially and may throw errors if not handled well
+\item Using numpy over traditional lists in python definitely improves the performance. 
+\item Pandas is a handy package for data manipulation.
+\item For SSVM, we used the pystruct package. Pystruct package has issues in dealing with labels that are not ordered sequentially and may throw errors if not handled well.
 \item CRFSuite is an efficient and flexible package for creating CRF models. 
 \end{enumerate}
 

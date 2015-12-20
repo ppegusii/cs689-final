@@ -1,4 +1,4 @@
-\section{Experimental Evaluation}
+\section{Experimental Evaluation}\label{sec:eval}
 
 \subsection{Datasets}
 
@@ -56,7 +56,7 @@ Table~\ref{table:datasets}, shows the summary of the dataset we use for our eval
 \textbf{Duration(days)} & 25 & 14 & 19\\ \hline
 \textbf{Sensors} & 14 & 23 & 21\\ \hline
 \textbf{Activities} & 10 & 13 & 16\\ \hline
-\textbf{Annotation} & Bluetooth & Diary & Bluetooh\\ \hline
+\textbf{Annotation} & Bluetooth & Diary & Bluetooth\\ \hline
 \end{tabular}
 \end{center}
 %\vspace{-0.1cm}
@@ -120,15 +120,22 @@ Table~\ref{table:datasets}, shows the summary of the dataset we use for our eval
 
 We use 5-fold cross validation to evaluate different methods. We use the timeslice duration of 1 sec for all our evaluation. 
 Figure~\ref{fig:comparison}, compares the accuracy of the different models. 
-We observe that the \emph{last} and \emph{last+change} feature representation has the highest accuracy compared to \emph{raw} and \emph{change} feature representation in House A and House C. We note that combining \emph{last} and \emph{change} feature set  has similar or better accuracy compared to other feature representations. However, in House B the \emph{raw} representations performs better using Naive Bayes. We believe that the amount of training data available for House B affected the learning of the parameters. 
+We observe that the \emph{last} and \emph{last+change} feature representations have the highest accuracy compared to \emph{raw} and \emph{change} in House A and House C. We note that combining \emph{last} and \emph{change} feature set  has similar or better accuracy compared to other feature representations. However, in House B the \emph{raw} representations performs better using SSVM.
+We believe that the amount of training data available for House B affected the learning of the parameters. 
+%We believe that the greater sensor density amount of training data available for House B affected the learning of the parameters. 
 
-Even though, Naive Bayes is a simple approach that assumes independence between the features, we note that it performs better than among methods. This may be due to the high frequency of 1 sec or the property of the underlying dataset, where in the time-slice is independent of one another. We also observe that the Structured SVM performs similar or slightly than Linear SVM. This is because the structured SVM takes into account the underlying structure of the output space compared to the simplistic approach taken in Linear SVM. While we expected HMM and CRF to perform better than other models, as it explicitly captures the temporal relations, our results show that simple approaches can also work better. 
+Even though, Naive Bayes is a simple approach that assumes independence between the activities, we note that it performs better than HMM among the models.
+This may be due to the high frequency of 1 sec or the property of the underlying dataset, where in the time-slice is independent of one another.
+We also observe that the Structured SVM performs similarly or slightly better than Linear SVM.
+This is because the structured SVM takes into account the underlying structure of the output space compared to the simplistic approach taken in Linear SVM. While we expected HMM and CRF to perform better than other models, as it explicitly captures the temporal relations, our results show that simple approaches can also work better. 
 
 
 
-Table~\ref{table:perfA} shows the performance metrics of House A. Since, there is class imbalance, precision and recalls provides a better insight into the quality of the classification. Again, we note that the simple Naive Bayes approach provides the highest precision and recall score.This means that the Naive Bayes approach is not only correctly classifying the frequent activities but also correctly classifying the infrequent ones. Due to space constraints, we do not show the results for other houses.
+Table~\ref{table:perfA} shows the performance metrics of House A. Since, there is class imbalance, precision and recalls provides a better insight into the quality of the classification. Again, we note that the simple Naive Bayes approach provides the highest precision and recall score.
+This means that the Naive Bayes approach is not only correctly classifying the frequent activities but also correctly classifying the infrequent ones. Due to space constraints, we do not show the results for other houses.
 
 
+\begin{centering}
 \captionof{table}{House A: Performance metrics}
 \label{table:perfA}
 \begin{tabular}{llrrrr}
@@ -148,16 +155,18 @@ CRF & Change &        9.1 &    10.5 &        9.4 &      50.8 \\
     & Raw &       13.3 &    13.6 &       13.4 &      56.9 \\
     & Last &       25.8 &    25.7 &       25.6 &      91.1 \\
     & Last+Change &       26.7 &    28.0 &       27.3 &      93.7 \\
-SSVM & Change &       13.9 &    10.3 &        7.5 &      53.1 \\
+\textbf{SSVM} & Change &       13.9 &    10.3 &        7.5 &      53.1 \\
     & Raw &       23.0 &    15.2 &       15.3 &      61.3 \\
     & Last &       30.3 &    29.2 &       28.9 &      93.7 \\
-    & Last+Change &       36.1 &    28.2 &       27.6 &      94.5 \\
+	& \textbf{Last+Change} &       \textbf{36.1} &    \textbf{28.2} &       \textbf{27.6} &      \textbf{94.5} \\
 NB & Change &       38.1 &    11.6 &        9.9 &      53.2 \\
     & Raw &       52.7 &    17.3 &       17.0 &      63.1 \\
     & Last &       28.3 &    28.2 &       27.7 &      94.4 \\
     & Last+Change &       49.4 &    30.1 &       30.7 &      93.9 \\
 \bottomrule
-\end{tabular}\\
+\end{tabular}
+\end{centering}
+\vspace{1cm}
 
 Table~\ref{table:confusionA} shows the confusion matrix for House A for the Naive Bayes Model. We note that Naive Bayes correctly classifies majority of the of the dominant classes correctly. Most of the confusion takes place in activities such as Breakfast or Dinner, where the activity period may be short or infrequent. However, the dominant classes such as 'idle' or 'leaving house' or 'go to bed' activities are labeled correctly. \\
 

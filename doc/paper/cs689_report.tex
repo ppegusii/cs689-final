@@ -63,13 +63,13 @@ Clearly, activity recognition is a challenging problem. Thus, we chose a dataset
 \subsection{Feature Representation}
 We describe the feature representation we use for classification purpose:
 \begin{enumerate}
-\item Raw: This uses the binary sensors readings directly. For each time step $t$, it takes the value of 1 or 0 depending on whether the sensor is actuated. 
+\item \textbf{Raw}: This uses the binary sensors readings directly. For each time step $t$, it takes the value of 1 or 0 depending on whether the sensor is actuated. 
 %the raw sensor representation uses the sensor data directly as it was received from the sensors. It gives a 1 when the sensor is firing and a 0 otherwise 
-\item Change: The feature contains the sensor value as 1 only when there is a change in the state. 
+\item \textbf{Change}: The feature contains the sensor value as 1 only when there is a change in the state. 
 %The change point representation indicates when a sensor event takes place. That is, it indicates when a sensor changes value. More formally, it gives a 1 when a sensor changes state (i.e. goes from zero to one or vice versa) and a 0 otherwise.
-\item Last: The feature continues to have the sensor value as 1 until another sensor changes its state. 
+\item \textbf{Last}: The feature continues to have the sensor value as 1 until another sensor changes its state. 
 %The last-fired sensor representation indicates which sensor fired last. The sensor that changed state last continues to give 1 and changes to 0 when another sensor changes state 
-\item Last + Change: This feature combines the Last+Change representations. 
+\item \textbf{Last + Change}: This feature combines the Last+Change representations. 
 \end{enumerate}
 
 \subsection{Models}
